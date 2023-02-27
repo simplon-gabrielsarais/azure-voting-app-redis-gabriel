@@ -16,6 +16,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file app/Dockerfile --tag az_vote_app:$(date)
+      run: docker build . --file Dockerfile --tag az_vote_app:$(date +%s)
     - name: see images
       run : docker images -a
