@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: voteapp
-        image: localhost:5000/az-vote-app:local
+        image: az-vote-app
         imagePullPolicy: Never
         ports:
         - containerPort: 80
