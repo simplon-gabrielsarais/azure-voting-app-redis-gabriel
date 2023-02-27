@@ -18,4 +18,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s) >> $GITHUB_ENV
     - name: use variable
-      run : echo"${{env.output}}
+      run : echo"${{env}}"
