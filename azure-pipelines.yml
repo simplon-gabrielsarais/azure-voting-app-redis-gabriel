@@ -13,7 +13,7 @@ steps:
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'voteapp_Brief8_GS'
+    containerRegistry: 'voteapp_brief8_gs'
     repository: 'Voteapp_Brief8_GS'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
