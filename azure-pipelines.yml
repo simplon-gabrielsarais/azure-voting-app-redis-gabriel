@@ -11,10 +11,6 @@ pool:
 
 steps:
 
-- task: CmdLine@2
-  inputs:
-    script: |
-
 - task: Docker@2
   inputs:
     containerRegistry: 'voteapp_Brief8_GS'
