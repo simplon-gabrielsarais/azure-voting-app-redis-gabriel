@@ -13,12 +13,4 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      ls -la
-
-- task: Docker@2
-  inputs:
-    containerRegistry: 'voteapp_brief8_gs'
-    repository: 'grabibel/Voteapp_Brief8_GS'
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
-    tags: 'Latest'
+      sed -n -e '11p' (^ver = ")\d{1}\.\d{1}\.\d* azure-vote/main.py | 
