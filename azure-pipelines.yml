@@ -13,6 +13,6 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      ver =$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
+      $ver =$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
       print $ver 
 
