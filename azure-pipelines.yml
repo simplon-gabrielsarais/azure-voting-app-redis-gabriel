@@ -19,6 +19,10 @@ steps:
     Dockerfile: 'Dockerfile'
     tags: 'latest'
 
+- task: CmdLine@2
+  inputs:
+    script: 'kubectl get pods -n qal -o jsonpath="{.items[*].spec.containers[*].image}" | tr -s ''[[:space:]]'' ''\n''| sort | uniq'
+
 - task: KubernetesManifest@0
   inputs:
     action: 'deploy'
