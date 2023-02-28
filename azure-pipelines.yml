@@ -14,11 +14,12 @@ steps:
 - task: Kubernetes@1
   inputs:
     connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceEndpoint: 'kuber'
+    kubernetesServiceEndpoint: 'connexion'
     namespace: 'qal'
     command: 'get'
     arguments: 'deployments'
-    outputFormat: 'json'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'
   name: "kube"
 
 - task: CmdLine@2
