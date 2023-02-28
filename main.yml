@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: voteapp
-        image: thjulian23/brief-8-tj
+        image: thjulian23/brief-8-tj:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 80
