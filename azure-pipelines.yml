@@ -13,4 +13,4 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      echo sed -n '11 s/\d{1}\.\d{1}\.\d* //p' azure-vote/main.py
+      sed -n '11 s/\d{1}\.\d{1}\.\d* //p' azure-vote/main.py | echo
