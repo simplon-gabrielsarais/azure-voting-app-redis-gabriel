@@ -17,6 +17,7 @@ steps:
     repository: 'thjulian23/brief-8-tj'
     command: 'buildAndPush'
     Dockerfile: 'Dockerfile'
+    tags: 'latest'
 
 - task: KubernetesManifest@0
   inputs:
