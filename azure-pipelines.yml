@@ -26,9 +26,14 @@ steps:
     Dockerfile: 'Dockerfile'
     tags: $(version)
 
+- task: CmdLine@2
+  inputs:
+    script: 'sed -i ''s/{{ version }}/''$(version)''/g'' main.yml'
+
 - task: KubernetesManifest@0
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
     namespace: 'qal'
     manifests: 'main.yml'
+
