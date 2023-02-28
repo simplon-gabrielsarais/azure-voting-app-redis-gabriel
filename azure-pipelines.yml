@@ -9,6 +9,8 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+steps:
+
 - task: Kubernetes@1
   inputs:
     connectionType: 'Kubernetes Service Connection'
@@ -19,7 +21,6 @@ pool:
     outputFormat: 'json'
   name: "kube"
 
-steps:
 - task: CmdLine@2
   inputs:
     script: |
