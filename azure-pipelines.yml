@@ -17,7 +17,12 @@ steps:
     repository: 'thjulian23/brief-8-tj'
     command: 'buildAndPush'
     Dockerfile: 'Dockerfile'
-    tags: 'latest'
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      versionnew=$(curl 'https://hub.docker.com/r/thjulian23/brief-8-tj/tags' | jq -r '."results"[0]["name"]')
+      sed -i 's/{{ version }}/'$versionnew'/g' main.yml
 
 - task: KubernetesManifest@0
   inputs:
