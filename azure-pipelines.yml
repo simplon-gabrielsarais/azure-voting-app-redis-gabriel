@@ -16,7 +16,7 @@ steps:
   inputs:
     script: |
       ver=$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
-      echo $ver
+      echo "##vso[task.setvariable variable=version]$ver"
 
 - task: Docker@2
   inputs:
@@ -24,6 +24,7 @@ steps:
     repository: 'thjulian23/brief-8-tj-2'
     command: 'buildAndPush'
     Dockerfile: 'Dockerfile'
+    tags: $(version)
 
 - task: KubernetesManifest@0
   inputs:
