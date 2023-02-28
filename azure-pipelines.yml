@@ -24,4 +24,4 @@ steps:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
     namespace: 'qal'
-    manifests: './kubernetes'
+    manifests: 'main.yml'
