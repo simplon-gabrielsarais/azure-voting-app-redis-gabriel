@@ -10,6 +10,10 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: CmdLine@2
+  inputs:
+    script: |
+      ls -la
 
 - task: Docker@2
   inputs:
@@ -17,3 +21,4 @@ steps:
     repository: 'grabibel/Voteapp_Brief8_GS'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
+    tags: 'Latest'
