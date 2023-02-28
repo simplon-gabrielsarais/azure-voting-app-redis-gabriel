@@ -13,4 +13,6 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      sed -n '11 s/\d{1}\.\d{1}\.\d* //p' azure-vote/main.py | echo
+      ver =$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
+      print $ver 
+
