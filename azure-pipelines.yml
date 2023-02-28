@@ -19,9 +19,16 @@ steps:
     Dockerfile: 'Dockerfile'
     tags: 'latest'
 
-- task: CmdLine@2
+- task: Kubernetes@1
   inputs:
-    script: 'kubectl get pods -n qal -o jsonpath="{.items[*].spec.containers[*].image}" | tr -s ''[[:space:]]'' ''\n''| sort | uniq'
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceEndpoint: 'cluster-connection'
+    namespace: 'qal'
+    command: 'get'
+    arguments: 'pods -o jsonpath="{.items[*].spec.containers[*].image}" | tr -s ''[[:space:]]'' ''\n''| sort | uniq'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Container Registry'
+    dockerRegistryEndpoint: 'dockerhub connection'
 
 - task: KubernetesManifest@0
   inputs:
