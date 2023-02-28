@@ -22,5 +22,5 @@ steps:
     repository: 'grabibel/voteapp_brief8_gs'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
-    tags: variables['version']
+    tags: $(version)
 
