@@ -14,5 +14,13 @@ steps:
   inputs:
     script: |
       ver=$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
-      echo $ver 
+      echo "##vso[task.setvariable variable=version]$ver"
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'voteapp_Brief8_GS'
+    repository: 'grabibel/voteapp_brief8_gs'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: variables['version']
 
