@@ -14,7 +14,7 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'dockerhub connection'
-    repository: 'brief-8-tj'
+    repository: 'thjulian23/brief-8-tj'
     command: 'buildAndPush'
     Dockerfile: 'Dockerfile'
 
