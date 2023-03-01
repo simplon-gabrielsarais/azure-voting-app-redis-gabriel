@@ -1,18 +1,16 @@
+
 #!/usr/bin/env bash
 # coding: utf-8
 # vi: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
-directory="azure-vote"
-filename="main.py"
+set -e
 
-ver=$(grep -oP '(?<=ver=)[0-9]\.[0-9]\.[0-9]' "$directory/$filename")
+PATCH=$(ag --nonumbers '^ver =' azure-vote/main.py | sed -re 's/ver = "1\.0\.([0-9]+)"/\1/')
 
-new_ver=$(printf "%d.%d.%d" $((RANDOM%10)) $((RANDOM%10)) $((RANDOM%10)))
-
-sed -i "s/ver=$ver/ver=$new_ver/g" "$directory/$filename"
-
-echo "Done. Updated $filename in $directory with new version number $new_ver."
-
-git commit -a -m "new vers" && git push
+while true; do
+    PATCH=$((PATCH+1))
+    sed -i -re "s/(ver = \"1\.0\.).(.*)$/\1${PATCH}\2/" azure-vote/main.py
+    git commit -a -m "new vers" && git push
+done
 
 exit 0

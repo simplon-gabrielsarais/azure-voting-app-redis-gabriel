@@ -8,14 +8,10 @@ import uuid
 
 
 app = Flask(__name__)
-<<<<<<< HEAD
-ver = "1.0.410"
-=======
-ver = "1.0.500"
->>>>>>> 7303f99814950f0ad6e6332708d459d1a7e0face
+ver = "1.0.111"
 
-button1 = "Free"
-button2 = "M6mobile"
+button1 = "free"
+button2 = "m6mobile"
 host = socket.gethostname()
 hostn = os.environ.get('HOSTNAME', str(uuid.uuid4()))
 title = f"Azure Voting App v{ver} on {host}"
