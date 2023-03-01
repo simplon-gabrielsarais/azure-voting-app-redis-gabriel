@@ -31,7 +31,7 @@ steps:
       echo "##vso[task.setvariable variable=verrep]$versionrep"
       echo "##vso[task.setvariable variable=vernew]$versionnew"
       echo "##vso[task.setvariable variable=verold]$versionold"
-      sed -i 's/{{ version }}/'$vernew'/g' main.yml
+      sed -i 's/{{ version }}/'$versionnew'/g' main.yml
 
 - task: Docker@2
   condition: ne(variables['verrep'],variables['vernew'])
