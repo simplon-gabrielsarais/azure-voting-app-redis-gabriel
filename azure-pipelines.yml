@@ -60,13 +60,9 @@ steps:
     command: 'delete'
     useConfigurationFile: true
     configuration: 'main.yml'
-    secretType: 'dockerRegistry'
-    containerRegistryType: 'Container Registry'
-    dockerRegistryEndpoint: 'dockerhub connection'
 
 - task: KubernetesManifest@0
   name: kubeonprod
-  condition: succeeded()
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
