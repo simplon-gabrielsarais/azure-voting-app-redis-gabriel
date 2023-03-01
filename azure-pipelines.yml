@@ -25,7 +25,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      versionrep=$((curl 'https://hub.docker.com/v2/repositories/grabibel/brief-8-tj/tags' | jq '."results"[0]["name"]')| sed 's/^"//;s/"$//')
+      versionrep=$((curl 'https://hub.docker.com/v2/repositories/thjulian23/brief-8-tj-2/tags' | jq '."results"[0]["name"]'| sed 's/^"//;s/"$//')
       versionold=$(echo $KUBE_KUBECTLOUTPUT | jq '.items[1].spec.template.spec.containers[].image' | cut -d: -f2 | sed 's/"//')
       versionnew=$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
       echo $versionrep
