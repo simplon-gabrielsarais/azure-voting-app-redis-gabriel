@@ -54,7 +54,7 @@ steps:
 
 - task: KubernetesManifest@0
   name: kubeonprod
-  condition: succeeded('kubeonqal')
+  condition: succeeded('KubernetesManifest@0')
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
