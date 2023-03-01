@@ -43,7 +43,7 @@ steps:
     tags: $(vernew)
 
 - task: KubernetesManifest@0
-  condition: ne(variables['verold'],variables['verrep'])
+  condition: ne(variables['verold'],variables['vernew'])
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
