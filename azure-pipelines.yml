@@ -33,6 +33,7 @@ steps:
       echo "##vso[task.setvariable variable=verold]$versionold"
       sed -i 's/{{ version }}/'$versionnew'/g' kube_brief6/voteapp.yml
       sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
+      cat kube_brief6/voteapp.yml | grep '- port:'
 
 
 - task: Docker@2
