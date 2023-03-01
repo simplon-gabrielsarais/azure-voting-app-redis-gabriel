@@ -52,7 +52,8 @@ steps:
     manifests: 'main.yml'
 
 - task: KubernetesManifest@0
-  condition: and(succeededorFailed(), eq(variables['kubeonqal.doThing'], 'Yes'))
+  name: kubeonprod
+  condition: and(succeededorFailed(), eq(variables['kubeonqal'], 'Yes'))
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
