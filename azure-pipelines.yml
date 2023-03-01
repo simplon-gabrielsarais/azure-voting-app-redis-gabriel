@@ -53,6 +53,7 @@ steps:
     manifests: 'main.yml'
 
 - task: Kubernetes@1
+  name: deletekubeqal
   inputs:
     connectionType: 'Kubernetes Service Connection'
     kubernetesServiceEndpoint: 'cluster-connection'
@@ -73,7 +74,7 @@ steps:
     manifests: 'main.yml'
 
 - task: KubernetesManifest@0
-  name: kubeonprodcanary
+  name: kubeonprod
   condition: succeeded()
   inputs:
     action: 'deploy'
