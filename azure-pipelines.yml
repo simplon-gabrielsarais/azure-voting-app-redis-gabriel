@@ -49,7 +49,7 @@ steps:
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
-    namespace: 'qal'
+    namespace: 'prod'
     manifests: 'main.yml'
 
 - task: Kubernetes@1
