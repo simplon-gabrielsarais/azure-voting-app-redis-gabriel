@@ -43,9 +43,18 @@ steps:
     tags: $(vernew)
 
 - task: KubernetesManifest@0
+  name: kubeonqal
   condition: ne(variables['verold'],variables['vernew'])
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
     namespace: 'qal'
+    manifests: 'main.yml'
+
+- task: KubernetesManifest@0
+  condition: and(succeededorFailed(), eq(variables['kubeonqal.doThing'], 'Yes'))
+  inputs:
+    action: 'deploy'
+    kubernetesServiceConnection: 'cluster-connection'
+    namespace: 'prod'
     manifests: 'main.yml'
