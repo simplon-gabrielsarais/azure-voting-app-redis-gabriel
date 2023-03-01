@@ -60,7 +60,6 @@ steps:
     command: 'delete'
     useConfigurationFile: true
     configuration: 'main.yml'
-    arguments: '-f'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Container Registry'
     dockerRegistryEndpoint: 'dockerhub connection'
