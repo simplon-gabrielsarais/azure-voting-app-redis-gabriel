@@ -44,6 +44,7 @@ steps:
 
 - task: KubernetesManifest@0
   name: kubeonqal
+  displayName: 'kubeonqal'
   condition: ne(variables['verold'],variables['vernew'])
   inputs:
     action: 'deploy'
