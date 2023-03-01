@@ -15,7 +15,7 @@ steps:
   inputs:
     connectionType: 'Kubernetes Service Connection'
     kubernetesServiceEndpoint: 'cluster-connection'
-    namespace: 'qal'
+    namespace: 'prod'
     command: 'get'
     arguments: 'deployments'
     secretType: 'dockerRegistry'
@@ -70,4 +70,12 @@ steps:
     namespace: 'prod'
     strategy: 'canary'
     percentage: '50'
+    manifests: 'main.yml'
+
+
+- task: KubernetesManifest@0
+  inputs:
+    action: 'deploy'
+    kubernetesServiceConnection: 'cluster-connection'
+    namespace: 'prod'
     manifests: 'main.yml'
