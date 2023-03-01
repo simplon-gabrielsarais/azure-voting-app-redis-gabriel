@@ -52,6 +52,19 @@ steps:
     namespace: 'qal'
     manifests: 'main.yml'
 
+- task: Kubernetes@1
+  inputs:
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceEndpoint: 'cluster-connection'
+    namespace: 'qal'
+    command: 'delete'
+    useConfigurationFile: true
+    configuration: 'main.yml'
+    arguments: '-f'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Container Registry'
+    dockerRegistryEndpoint: 'dockerhub connection'
+
 - task: KubernetesManifest@0
   name: kubeonprod
   condition: succeeded()
