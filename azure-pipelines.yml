@@ -68,4 +68,6 @@ steps:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
     namespace: 'prod'
+    strategy: 'canary'
+    percentage: '50'
     manifests: 'main.yml'
