@@ -45,21 +45,21 @@ steps:
 - task: KubernetesManifest@0
   name: kubeonqal
   displayName: 'kubeonqal'
-  condition: ne(variables['verold'],variables['vernew'])
+#  condition: ne(variables['verold'],variables['vernew'])
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
     namespace: 'qal'
     manifests: 'main.yml'
 
-- task: Kubernetes@1
-  inputs:
-    connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceEndpoint: 'cluster-connection'
-    namespace: 'qal'
-    command: 'delete'
-    useConfigurationFile: true
-    configuration: 'main.yml'
+#- task: Kubernetes@1
+#  inputs:
+#    connectionType: 'Kubernetes Service Connection'
+#    kubernetesServiceEndpoint: 'cluster-connection'
+#    namespace: 'qal'
+#    command: 'delete'
+#    useConfigurationFile: true
+#    configuration: 'main.yml'
 
 - task: KubernetesManifest@0
   name: kubeonprod
