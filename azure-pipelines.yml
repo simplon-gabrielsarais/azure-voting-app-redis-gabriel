@@ -62,7 +62,7 @@ steps:
     configuration: 'main.yml'
 
 - task: KubernetesManifest@0
-  name: kubeonprod
+  name: kubeonprodcanary
   condition: succeeded()
   inputs:
     action: 'deploy'
@@ -72,16 +72,9 @@ steps:
     percentage: '50'
     manifests: 'main.yml'
 
-- task: Kubernetes@1
-  inputs:
-    connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceEndpoint: 'cluster-connection'
-    namespace: 'prod'
-    command: 'delete'
-    useConfigurationFile: true
-    configuration: 'main.yml'
-
 - task: KubernetesManifest@0
+  name: kubeonprodcanary
+  condition: succeeded()
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'cluster-connection'
