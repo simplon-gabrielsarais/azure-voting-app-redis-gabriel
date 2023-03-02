@@ -61,7 +61,7 @@ steps:
       namespace: 'prod'
       strategy: 'canary'
       percentage: '50'
-      manifests: 'deployment-canary.yml'
+      manifests: 'deployment-canary.yaml'
 
   - task: Kubernetes@1
     name: deletekubeqal
