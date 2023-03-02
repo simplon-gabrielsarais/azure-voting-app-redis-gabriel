@@ -15,7 +15,7 @@ steps:
   inputs:
     connectionType: 'Kubernetes Service Connection'
     kubernetesServiceEndpoint: 'connexion'
-    namespace: 'qal'
+    namespace: 'prod'
     command: 'get'
     arguments: 'deployments'
     secretType: 'dockerRegistry'
