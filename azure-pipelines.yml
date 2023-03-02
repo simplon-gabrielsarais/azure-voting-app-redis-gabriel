@@ -32,8 +32,8 @@ steps:
       echo "##vso[task.setvariable variable=verrep]$versionrep"
       echo "##vso[task.setvariable variable=verold]$versionold"
       sed -i 's/{{ version }}/'$versionnew'/g' kube_brief6/voteapp.yml
-      sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
-      sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
+      sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 80/g" kube_brief6/voteapp.yml
+      sed -i "s/              number: [[:digit:]]\{2\}/              number: 80/g" kube_brief6/ingress.yml
 
 - task: Docker@2
   condition: ne(variables['verrep'],variables['vernew'])
