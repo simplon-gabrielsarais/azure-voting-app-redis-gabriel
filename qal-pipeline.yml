@@ -9,19 +9,18 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-- task: Kubernetes@1
-  inputs:
-    connectionType: 'Kubernetes Service Connection'
-    kubernetesServiceEndpoint: 'cluster-connection'
-    namespace: 'prod'
-    command: 'get'
-    arguments: 'deployments'
-    secretType: 'dockerRegistry'
-    containerRegistryType: 'Azure Container Registry'
-  name: "kube"
+steps:
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'cluster-connection'
+      namespace: 'prod'
+      command: 'get'
+      arguments: 'deployments'
+    name: "kube"
 
-- task: CmdLine@2
-  inputs:
+  - task: CmdLine@2
+    inputs:
     script: |
       versionrep=$(curl 'https://hub.docker.com/v2/repositories/thjulian23/brief-8-tj-2/tags'| jq '."results"[0]["name"]'|sed 's/^"//;s/"$//')
       versionold=$(echo $KUBE_KUBECTLOUTPUT | jq '.items[1].spec.template.spec.containers[].image' | cut -d: -f2 | sed 's/"//')
@@ -31,21 +30,22 @@ pool:
       echo "##vso[task.setvariable variable=vernew]$versionnew"
       sed -i 's/{{ version }}/'$versionnew'/g' main.yml
 
-- task: Docker@2
-  condition: ne(variables['verrep'],variables['vernew'])
-  inputs:
-    containerRegistry: 'dockerhub connection'
-    repository: 'thjulian23/brief-8-tj-2'
-    command: 'buildAndPush'
-    Dockerfile: 'Dockerfile'
-    tags: $(vernew)
 
-- task: KubernetesManifest@0
-  name: kubeonqal
-  displayName: 'kubeonqal'
-  condition: ne(variables['verold'],variables['vernew'])
-  inputs:
-    action: 'deploy'
-    kubernetesServiceConnection: 'cluster-connection'
-    namespace: 'qal'
-    manifests: 'main.yml'
+  - task: Docker@2
+    condition: ne(variables['verrep'],variables['vernew'])
+    inputs:
+      containerRegistry: 'dockerhub connection'
+      repository: 'thjulian23/brief-8-tj-2'
+      command: 'buildAndPush'
+      Dockerfile: 'Dockerfile'
+      tags: $(vernew)
+
+  - task: KubernetesManifest@0
+    name: kubeonqal
+    displayName: 'kubeonqal'
+    condition: ne(variables['verold'],variables['vernew'])
+    inputs:
+      action: 'deploy'
+      kubernetesServiceConnection: 'cluster-connection'
+      namespace: 'qal'
+      manifests: 'main.yml'
