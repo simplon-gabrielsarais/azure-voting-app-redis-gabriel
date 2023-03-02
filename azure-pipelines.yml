@@ -94,7 +94,7 @@ steps:
     namespace: 'prod'
     strategy: 'canary'
     percentage: '10'
-    manifests: '**/kube_brief6/*'
+    manifests: '**/kube_brief6/'
     rolloutStatusTimeout: '60'
   name: "kube_prod"
 
