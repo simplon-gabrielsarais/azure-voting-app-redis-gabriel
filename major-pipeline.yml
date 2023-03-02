@@ -79,7 +79,7 @@ steps:
   - task: ManualIntervention@8
     inputs:
       instructions: 'valid or not valid?'
-      emailRecipients: 'th.julian23@gmail.com'
+      emailRecipients: 'tjulian.ext@simplonformations.onmicrosoft.com'
       onTimeout: 'resume'
 
   - task: Kubernetes@1
