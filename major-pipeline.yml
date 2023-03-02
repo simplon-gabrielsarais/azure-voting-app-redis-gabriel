@@ -80,6 +80,7 @@ steps:
     inputs:
       instructions: 'valid or not valid?'
       emailRecipients: 'th.julian23@gmail.com'
+      onTimeout: 'resume'
 
   - task: Kubernetes@1
     name: deletecanary
