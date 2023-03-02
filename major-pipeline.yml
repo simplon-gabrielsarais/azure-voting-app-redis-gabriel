@@ -73,8 +73,7 @@ steps:
       kubernetesServiceEndpoint: 'cluster-connection'
       namespace: 'qal'
       command: 'delete'
-      useConfigurationFile: true
-      configuration: '/kubernetes/qal/'
+      arguments: '''-f $(System.DefaultWorkingDirectory)/kubernetes/qal'''
   
   - task: Kubernetes@1
     name: deletecanary
