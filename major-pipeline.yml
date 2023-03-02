@@ -65,7 +65,7 @@ steps:
 
   - task: Kubernetes@1
     name: deletekubeqal
-    condition: and(succeeded(), ne(variables['verold'],variables['vernew'])
+    condition: and(succeeded(), ne(variables['verold'],variables['vernew']))
     inputs:
       connectionType: 'Kubernetes Service Connection'
       kubernetesServiceEndpoint: 'cluster-connection'
