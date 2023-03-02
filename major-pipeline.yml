@@ -76,11 +76,10 @@ steps:
       arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal'
    
 
-  - task: ManualIntervention@8
+  - task: ManualValidation@0
     inputs:
-      instructions: 'valid or not valid?'
-      emailRecipients: 'tjulian.ext@simplonformations.onmicrosoft.com'
-      onTimeout: 'resume'
+      notifyUsers: 'th.julian23@gmail.com'
+      instructions: 'Hi, please validate'
 
   - task: Kubernetes@1
     name: deletecanary
