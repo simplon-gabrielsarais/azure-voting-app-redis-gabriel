@@ -31,7 +31,7 @@ steps:
       echo "##vso[task.setvariable variable=verrep]$versionrep"
       echo "##vso[task.setvariable variable=verold]$versionold"
       echo "##vso[task.setvariable variable=vernew]$versionnew"
-      sed -i 's/{{ version }}/'$versionnew'/g' main_canary.yml
+      sed -i 's/{{ version }}/'$versionnew'/g' main.yml
 
 - task: Kubernetes@1
   name: deletekubeqal
@@ -52,4 +52,4 @@ steps:
     namespace: 'prod'
     strategy: 'canary'
     percentage: '50'
-    manifests: 'main_canary.yml'
+    manifests: 'main.yml'
