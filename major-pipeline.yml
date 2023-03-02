@@ -74,7 +74,7 @@ steps:
       namespace: 'qal'
       command: 'delete'
       useConfigurationFile: true
-      configuration: '**/kubernetes/qal/*'
+      configuration: '/kubernetes/qal/'
   
   - task: Kubernetes@1
     name: deletecanary
