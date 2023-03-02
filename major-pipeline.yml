@@ -82,8 +82,7 @@ steps:
       kubernetesServiceEndpoint: 'cluster-connection'
       namespace: 'prod'
       command: 'delete'
-      useConfigurationFile: true
-      configuration: '**/kubernetes/canary/deletion-canary.yml'
+      arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/canary/deletion-canary.yml'
 
 
   - task: KubernetesManifest@0
