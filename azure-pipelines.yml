@@ -68,7 +68,7 @@ steps:
     kubernetesServiceEndpoint: 'connexion'
     namespace: 'qal'
     command: 'get'
-    arguments: 'pod'
+    arguments: 'pods'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
   name: kubepods
@@ -76,8 +76,9 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      verifscale=$(echo $KUBEPODS_KUBECTLOUTPUT)
-      echo $verifscale
+      jsonscale=$(echo $KUBEPODS_KUBECTLOUTPUT
+      echo jsonscale
+      
 
 
 - task: KubernetesManifest@0
