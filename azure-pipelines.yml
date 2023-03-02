@@ -52,5 +52,5 @@ steps:
     action: 'deploy'
     kubernetesServiceConnection: 'connexion'
     namespace: 'qal'
-    manifests: '**/kube_brief6/*'
+    manifests: '**/kube_brief6/qal/*'
 
