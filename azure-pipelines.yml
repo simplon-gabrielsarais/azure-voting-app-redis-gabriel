@@ -33,45 +33,16 @@ steps:
       echo "##vso[task.setvariable variable=vernew]$versionnew"
       sed -i 's/{{ version }}/'$versionnew'/g' main.yml
 
-- task: Docker@2
-  condition: ne(variables['verrep'],variables['vernew'])
-  inputs:
-    containerRegistry: 'dockerhub connection'
-    repository: 'thjulian23/brief-8-tj-2'
-    command: 'buildAndPush'
-    Dockerfile: 'Dockerfile'
-    tags: $(vernew)
-
-- task: KubernetesManifest@0
-  name: kubeonqal
-  displayName: 'kubeonqal'
-  condition: ne(variables['verold'],variables['vernew'])
-  inputs:
-    action: 'deploy'
-    kubernetesServiceConnection: 'cluster-connection'
-    namespace: 'qal'
-    manifests: 'main.yml'
-
 - task: Kubernetes@1
-  name: deletekubeqal
+  name: deletecanary
   inputs:
     connectionType: 'Kubernetes Service Connection'
     kubernetesServiceEndpoint: 'cluster-connection'
-    namespace: 'qal'
+    namespace: 'prod'
     command: 'delete'
     useConfigurationFile: true
-    configuration: 'main.yml'
+    configuration: 'main_canary.yml'
 
-- task: KubernetesManifest@0
-  name: kubeonprodcanary
-  condition: succeeded()
-  inputs:
-    action: 'deploy'
-    kubernetesServiceConnection: 'cluster-connection'
-    namespace: 'prod'
-    strategy: 'canary'
-    percentage: '50'
-    manifests: 'main.yml'
 
 - task: KubernetesManifest@0
   name: kubeonprod
