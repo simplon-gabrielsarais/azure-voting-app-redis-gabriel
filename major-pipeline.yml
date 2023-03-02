@@ -76,10 +76,14 @@ steps:
       arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal'
    
 
-  - task: ManualIntervention@8
+  - task: ManualValidation@0
+    timeoutInMinutes: 1440 # task times out in 1 day
     inputs:
-      instructions: 'Wait for test on canary'
-      emailRecipients: 'th.julian23@gmail.com'
+        notifyUsers: |
+          th.julian23@gmail.com
+        instructions: 'Please validate the build configuration and resume'
+        onTimeout: 'resume'
+
 
   - task: Kubernetes@1
     name: deletecanary
