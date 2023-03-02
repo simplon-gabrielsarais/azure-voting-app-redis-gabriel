@@ -28,9 +28,10 @@ steps:
         echo "##vso[task.setvariable variable=verrep]$versionrep"
         echo "##vso[task.setvariable variable=verold]$versionold"
         echo "##vso[task.setvariable variable=vernew]$versionnew"
-        sed -i 's/{{ version }}/'$versionnew'/g' main.yml
-        sed -i 's/{{ version }}/'$versionnew'/g' deployment-canary.yaml
-        sed -i 's/{{ version }}/'$versionnew'/g' deletion-canary.yml
+        sed -i 's/{{ version }}/'$versionnew'/g' kubernetes/main.yml
+        sed -i 's/{{ version }}/'$versionnew'/g' kubernetes/canary/deployment-canary.yaml
+        sed -i 's/{{ version }}/'$versionnew'/g' kubernetes/canary/deletion-canary.yml
+        sed -i 's/{{ version }}/'$versionnew'/g' kubernetes/qal/qal_app.yml
 
 
   - task: Docker@2
@@ -50,7 +51,7 @@ steps:
       action: 'deploy'
       kubernetesServiceConnection: 'cluster-connection'
       namespace: 'qal'
-      manifests: 'main.yml'
+      manifests: '**/kubernetes/qal/*'
 
 
   - task: KubernetesManifest@0
@@ -62,7 +63,7 @@ steps:
       namespace: 'prod'
       strategy: 'canary'
       percentage: '50'
-      manifests: 'deployment-canary.yaml'
+      manifests: '**/kubernetes/canary/deployment-canary.yaml'
 
   - task: Kubernetes@1
     name: deletekubeqal
@@ -73,7 +74,7 @@ steps:
       namespace: 'qal'
       command: 'delete'
       useConfigurationFile: true
-      configuration: 'main.yml'
+      configuration: '**/kubernetes/qal/*'
   
   - task: Kubernetes@1
     name: deletecanary
@@ -83,7 +84,7 @@ steps:
       namespace: 'prod'
       command: 'delete'
       useConfigurationFile: true
-      configuration: 'deletion-canary.yml'
+      configuration: '**/kubernetes/canary/deletion-canary.yml'
 
 
   - task: KubernetesManifest@0
@@ -93,4 +94,4 @@ steps:
       action: 'deploy'
       kubernetesServiceConnection: 'cluster-connection'
       namespace: 'prod'
-      manifests: 'main.yml'
+      manifests: '**/kubernetes/main.yml'
