@@ -74,7 +74,13 @@ steps:
       namespace: 'qal'
       command: 'delete'
       arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal'
-  
+   
+
+  - task: ManualIntervention@8
+    inputs:
+      instructions: 'valid or not valid?'
+      emailRecipients: 'th.julian23@gmail.com'
+
   - task: Kubernetes@1
     name: deletecanary
     inputs:
