@@ -29,6 +29,7 @@ steps:
         echo "##vso[task.setvariable variable=verold]$versionold"
         echo "##vso[task.setvariable variable=vernew]$versionnew"
         sed -i 's/{{ version }}/'$versionnew'/g' main.yml
+        sed -i 's/{{ version }}/'$versionnew'/g' main_canary.yml
 
 
   - task: Docker@2
@@ -48,4 +49,46 @@ steps:
       action: 'deploy'
       kubernetesServiceConnection: 'cluster-connection'
       namespace: 'qal'
+      manifests: 'main.yml'
+
+  - task: KubernetesManifest@0
+    name: kubeonprodcanary
+    condition: succeeded()
+    inputs:
+      action: 'deploy'
+      kubernetesServiceConnection: 'cluster-connection'
+      namespace: 'prod'
+      strategy: 'canary'
+      percentage: '50'
+      manifests: 'deployment-canary.yml'
+
+  - task: Kubernetes@1
+    name: deletekubeqal
+    condition: succeeded()
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'cluster-connection'
+      namespace: 'qal'
+      command: 'delete'
+      useConfigurationFile: true
+      configuration: 'main.yml'
+  
+  - task: Kubernetes@1
+    name: deletecanary
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'cluster-connection'
+      namespace: 'prod'
+      command: 'delete'
+      useConfigurationFile: true
+      configuration: 'deletion-canary.yml'
+
+
+  - task: KubernetesManifest@0
+    name: kubeonprod
+    condition: succeeded()
+    inputs:
+      action: 'deploy'
+      kubernetesServiceConnection: 'cluster-connection'
+      namespace: 'prod'
       manifests: 'main.yml'
