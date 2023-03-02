@@ -60,7 +60,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      seq 20 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=kebab' http://20.74.113.159:85"
+      seq 50 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=kebab' http://20.74.113.159:85"
 
 - task: Kubernetes@1
   inputs:
