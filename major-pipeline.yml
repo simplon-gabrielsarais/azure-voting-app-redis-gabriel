@@ -52,6 +52,17 @@ steps:
       namespace: 'qal'
       manifests: 'main.yml'
 
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'cluster-connection'
+      namespace: 'qal'
+      command: 'get'
+      arguments: 'pods -o=jsonpath=''{range .items[*]}{.status.phase}{"\n"}{end}'''
+      outputFormat: 'json'
+    name: qal
+
   - task: KubernetesManifest@0
     name: kubeonprodcanary
     condition: succeeded()
