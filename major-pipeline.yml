@@ -29,8 +29,8 @@ steps:
         echo "##vso[task.setvariable variable=verold]$versionold"
         echo "##vso[task.setvariable variable=vernew]$versionnew"
         sed -i 's/{{ version }}/'$versionnew'/g' main.yml
-        sed -i 's/{{ version }}/'$versionnew'/g' deployment_canary.yaml
-        sed -i 's/{{ version }}/'$versionnew'/g' deletion_canary.yml
+        sed -i 's/{{ version }}/'$versionnew'/g' deployment-canary.yaml
+        sed -i 's/{{ version }}/'$versionnew'/g' deletion-canary.yml
 
 
   - task: Docker@2
