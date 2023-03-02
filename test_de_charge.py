@@ -50,11 +50,11 @@ def main():
                 quits.append(q)
                 exc.submit(send_votes, i, q)
                 exc.submit(send_votes, i + 1, q)
-                time.sleep(300)
+                time.sleep(45)
 
             for q in quits:
                 q.set()
-                time.sleep(300)
+                time.sleep(45)
         except KeyboardInterrupt:
             pass
 
