@@ -79,7 +79,7 @@ steps:
       voteapp=0
       jsonscale=$(echo $KUBEPODS_KUBECTLOUTPUT
       foreach n (echo $jsonscale | jq '.items[]' ))
-      foreach? if [echo $jsonscale | jq -r '.items[$n].metadata.name'|awk -F- {'print $1'} == "voteapp"]
+      foreach? if [echo $jsonscale | jq -r '.items[$n].metadata.name'|awk -F- {'print $1'} == "voteapp"];
       then
           $voteapp++
       fi
