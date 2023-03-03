@@ -72,7 +72,7 @@ steps:
     kubernetesServiceEndpoint: 'connexion'
     namespace: 'qal'
     command: 'get'
-    arguments: "pod voteapp"
+    arguments: "pod.metadata"
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
   name: kubepods
