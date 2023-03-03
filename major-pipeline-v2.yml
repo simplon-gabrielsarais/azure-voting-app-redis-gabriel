@@ -19,7 +19,8 @@ stages:
           Dockerfile: 'Dockerfile'
 
 
-- stage: 'QAL_Deployment' 
+- stage: 'QAL_Deployment'
+  condition: succeeded()
   displayName: 'Deploy on QAL' 
   jobs:
   - job: 'QAL_Deploy' 
@@ -37,7 +38,8 @@ stages:
         manifests: '**/kubernetes/qal/*'
 
 
-- stage: 'Deploy_canary' 
+- stage: 'Deploy_canary'
+  condition: succeeded() 
   displayName: 'Deploy Canary Release' 
   jobs:
   - job: 'Deploy_canary' 
@@ -66,7 +68,8 @@ stages:
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal'
 
 
-- stage: 'ManualIntervention' 
+- stage: 'ManualIntervention'
+  condition: succeeded() 
   displayName: 'In waiting of validation of working canary release' 
   jobs:
   - job: waitForValidation
@@ -84,7 +87,7 @@ stages:
 
 
 
-- stage: 'DeployOnProd' 
+- stage: 'DeployOnProd'
   displayName: 'Deploy on Prod and delete Canary' 
   jobs:
   - job: 'Deployonprod' 
