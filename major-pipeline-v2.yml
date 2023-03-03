@@ -102,6 +102,26 @@ stages:
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
+
+    - task: Kubernetes@1
+      name: deleteprodapp
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'cluster-connection'
+        namespace: 'prod'
+        command: 'delete'
+        arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/prod/deploy_app.yml'
+      
+
+    - task: KubernetesManifest@0
+      name: kubeonprod
+      condition: succeeded()
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'cluster-connection'
+        namespace: 'prod'
+        manifests: '**/kubernetes/deploy_app.yml'
+
     - task: Kubernetes@1
       name: deletecanary
       inputs:
@@ -110,11 +130,3 @@ stages:
         namespace: 'prod'
         command: 'delete'
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/canary/deletion-canary.yml'
-    - task: KubernetesManifest@0
-      name: kubeonprod
-      condition: succeeded()
-      inputs:
-        action: 'deploy'
-        kubernetesServiceConnection: 'cluster-connection'
-        namespace: 'prod'
-        manifests: '**/kubernetes/main.yml'
