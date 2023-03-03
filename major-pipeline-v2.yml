@@ -37,17 +37,24 @@ stages:
         namespace: 'qal'
         manifests: '**/kubernetes/qal/*'
     - task: Bash@3
+      name: waitingfordeploy
       inputs:
         targetType: 'inline'
         script: 'sleep 30'
       
     - task: CmdLine@2
       inputs:
-        script: 'curl -iF "vote=free" http://qalvotingapp.simplon-thomas.space/'
+        script: 'curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space'
+      name: 'curl'
+
+    - task: CmdLine@2
+      inputs:
+        script: 'if $(curl.lastexitcode) -eq 200 echo "HTTP Response Code is 200"; else { echo "HTTP Response Code is not 200. Exiting."; exit 1 }'
+      name: 'check'
 
     - task: Kubernetes@1
       name: deleteqal
-      condition: succeeded()
+      condition: eq(variables['check.lastexitcode'], '0') 
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'cluster-connection'
