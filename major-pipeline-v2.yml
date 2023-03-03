@@ -51,7 +51,7 @@ stages:
 
     - task: Kubernetes@1
       name: deleteqal
-      condition: variables['exit'] eq '200'
+      condition: eq(variables['exit'],'200')
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'cluster-connection'
