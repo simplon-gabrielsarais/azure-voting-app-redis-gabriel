@@ -64,7 +64,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'sleep 100'
+    script: 'sleep 50'
 
 - task: Kubernetes@1
   inputs:
