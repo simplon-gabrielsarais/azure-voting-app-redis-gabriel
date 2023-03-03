@@ -92,9 +92,9 @@ steps:
     rolloutStatusTimeout: '60'
   name: "kube_prod"
 
-- task: Delay@1
+- task: CmdLine@2
   inputs:
-    delayForMinutes: '5'
+    script: 'sleep 300'
 
 - task: KubernetesManifest@0
   condition: gt(variables['appcnt'],2)
