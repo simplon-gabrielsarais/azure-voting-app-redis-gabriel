@@ -11,51 +11,51 @@ pool:
 
 steps:
 
-# - task: Kubernetes@1
-#   inputs:
-#     connectionType: 'Kubernetes Service Connection'
-#     kubernetesServiceEndpoint: 'connexion'
-#     namespace: 'prod'
-#     command: 'get'
-#     arguments: 'deployments'
-#     secretType: 'dockerRegistry'
-#     containerRegistryType: 'Azure Container Registry'
-#   name: "kubeinfo"
+- task: Kubernetes@1
+  inputs:
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceEndpoint: 'connexion'
+    namespace: 'prod'
+    command: 'get'
+    arguments: 'deployments'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'
+  name: "kubeinfo"
 
-# - task: CmdLine@2
-#   inputs:
-#     script: |
-#       versionrep=$((curl 'https://hub.docker.com/v2/repositories/grabibel/voteapp_brief8_gs/tags' | jq '."results"[0]["name"]')| sed 's/^"//;s/"$//')
-#       versionold=$(echo $KUBEINFO_KUBECTLOUTPUT | jq '.items[1].spec.template.spec.containers[].image' | cut -d: -f2 | sed 's/"//')
-#       versionnew=$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
-#       echo "##vso[task.setvariable variable=vernew]$versionnew"
-#       echo "##vso[task.setvariable variable=verrep]$versionrep"
-#       echo "##vso[task.setvariable variable=verold]$versionold"
-#       sed -i 's/{{ version }}/'$versionnew'/g' kube_brief6/voteapp.yml
-#       sed -i 's/{{ version }}/'$versionnew'/g' qal/voteapp_qal.yml
-#      sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
-#      sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
+- task: CmdLine@2
+  inputs:
+    script: |
+      versionrep=$((curl 'https://hub.docker.com/v2/repositories/grabibel/voteapp_brief8_gs/tags' | jq '."results"[0]["name"]')| sed 's/^"//;s/"$//')
+      versionold=$(echo $KUBEINFO_KUBECTLOUTPUT | jq '.items[1].spec.template.spec.containers[].image' | cut -d: -f2 | sed 's/"//')
+      versionnew=$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
+      echo "##vso[task.setvariable variable=vernew]$versionnew"
+      echo "##vso[task.setvariable variable=verrep]$versionrep"
+      echo "##vso[task.setvariable variable=verold]$versionold"
+      sed -i 's/{{ version }}/'$versionnew'/g' kube_brief6/voteapp.yml
+      sed -i 's/{{ version }}/'$versionnew'/g' qal/voteapp_qal.yml
+    #  sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
+    #  sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
 
 
-# - task: Docker@2
-#   condition: ne(variables['verrep'],variables['vernew'])
-#   inputs:
-#     containerRegistry: 'voteapp_Brief8_GS'
-#     repository: 'grabibel/voteapp_brief8_gs'
-#     command: 'buildAndPush'
-#     Dockerfile: '**/Dockerfile'
-#     tags: $(vernew)
-#   name: "dockerhub_publish"
+- task: Docker@2
+  condition: ne(variables['verrep'],variables['vernew'])
+  inputs:
+    containerRegistry: 'voteapp_Brief8_GS'
+    repository: 'grabibel/voteapp_brief8_gs'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: $(vernew)
+  name: "dockerhub_publish"
 
-# - task: KubernetesManifest@0
-#   condition: ne(variables['verold'],variables['vernew'])
-#   inputs:
-#     action: 'deploy'
-#     kubernetesServiceConnection: 'connexion'
-#     namespace: 'qal'
-#     manifests: '**/qal/*'
-#     rolloutStatusTimeout: '60'
-#   name: "kube_qal"
+- task: KubernetesManifest@0
+  condition: ne(variables['verold'],variables['vernew'])
+  inputs:
+    action: 'deploy'
+    kubernetesServiceConnection: 'connexion'
+    namespace: 'qal'
+    manifests: '**/qal/*'
+    rolloutStatusTimeout: '60'
+  name: "kube_qal"
 
 - task: CmdLine@2
   inputs:
@@ -81,33 +81,32 @@ steps:
     script: |
       voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq '.items[0].spec.replicas')
       echo $voteappcount
-      echo $KUBEPODS_KUBECTLOUTPUT
       echo "##vso[task.setvariable variable=appcnt]$voteappcount"
 
-# - task: KubernetesManifest@0
-#   condition: ne(variables['appcnt'],2)
-#   inputs:
-#     action: 'deploy'
-#     kubernetesServiceConnection: 'connexion'
-#     namespace: 'prod'
-#     strategy: 'canary'
-#     percentage: '50'
-#     manifests: '**/kube_brief6/*'
-#     rolloutStatusTimeout: '60'
-#   name: "kube_prod"
+- task: KubernetesManifest@0
+  condition: ne(variables['appcnt'],2)
+  inputs:
+    action: 'deploy'
+    kubernetesServiceConnection: 'connexion'
+    namespace: 'prod'
+    strategy: 'canary'
+    percentage: '50'
+    manifests: '**/kube_brief6/*'
+    rolloutStatusTimeout: '60'
+  name: "kube_prod"
 
-# - task: CmdLine@2
-#   inputs:
-#     script: 'sleep 300'
+- task: CmdLine@2
+  inputs:
+    script: 'sleep 300'
 
-# - task: KubernetesManifest@0
-#   condition: ne(variables['appcnt'],2)
-#   inputs:
-#     action: 'deploy'
-#     kubernetesServiceConnection: 'connexion'
-#     namespace: 'prod'
-#     strategy: 'canary'
-#     percentage: '0'
-#     manifests: '**/kube_brief6/*'
-#     rolloutStatusTimeout: '60'
-#   name: "kube_prod2"
+- task: KubernetesManifest@0
+  condition: gt(variables['appcnt'],2)
+  inputs:
+    action: 'deploy'
+    kubernetesServiceConnection: 'connexion'
+    namespace: 'prod'
+    strategy: 'canary'
+    percentage: '0'
+    manifests: '**/kube_brief6/*'
+    rolloutStatusTimeout: '60'
+  name: "kube_prod2"
