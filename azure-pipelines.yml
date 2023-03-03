@@ -102,7 +102,7 @@ steps:
     script: 'sleep 300'
 
 - task: KubernetesManifest@0
-  condition: gt(variables['appcnt'],2)
+  dependsOn: kube_prod
   inputs:
     action: 'deploy'
     kubernetesServiceConnection: 'connexion'
