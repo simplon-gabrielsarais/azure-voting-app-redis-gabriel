@@ -42,17 +42,16 @@ stages:
         targetType: 'inline'
         script: 'sleep 30'
       
-    - task: CmdLine@2
+    - task: Bash@3
       inputs:
-        script: 'curl -s -o -I -w "%{http_code}" http://qalvotingapp.simplon-thomas.space'
-      name: 'curl'
+        targetType: 'inline'
+        script: |
+          'exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)'
+          echo "##vso[task.setvariable variable=exit]$exitcode"
 
-    - task: CmdLine@2
-      inputs:
-        script: 'echo $(curl.output)'
     - task: Kubernetes@1
       name: deleteqal
-      condition: succeeded()
+      condition: variables['exit'] eq '200'
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'cluster-connection'
