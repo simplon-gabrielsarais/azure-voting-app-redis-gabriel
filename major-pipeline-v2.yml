@@ -72,7 +72,7 @@ stages:
         kubernetesServiceConnection: 'cluster-connection'
         namespace: 'prod'
         strategy: 'canary'
-        percentage: '10'
+        percentage: '30'
         manifests: '**/kubernetes/canary/deployment-canary.yaml'
 
 - stage: 'ManualIntervention'
