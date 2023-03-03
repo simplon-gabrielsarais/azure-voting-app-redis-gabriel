@@ -9,13 +9,14 @@ stages:
     displayName: 'Docker Image Build' 
     pool:
       vmImage: ubuntu-latest 
-      steps:
-      - task: Docker@2
-        inputs:
-          containerRegistry: 'dockerhub connection'
-          repository: 'thjulian23/brief-8-tj-2'
-          command: 'buildAndPush'
-          Dockerfile: 'Dockerfile'
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'DockerHubConnection'
+        repository: 'thjulian23/brief-8-tj-2'
+        command: 'buildAndPush'
+        Dockerfile: './Dockerfile'
+        tags: 'latest'
 
 
 - stage: 'QAL_Deployment'
