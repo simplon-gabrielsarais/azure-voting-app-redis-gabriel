@@ -60,7 +60,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      seq 200 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=kebab' http://20.74.113.159:85"
+      seq 20 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=kebab' http://20.74.113.159:85"
 
 - task: Kubernetes@1
   inputs:
@@ -94,7 +94,7 @@ steps:
     namespace: 'prod'
     strategy: 'canary'
     percentage: '10'
-    manifests: '**/kube_brief6/'
+    manifests: '**/kube_brief6/*'
     rolloutStatusTimeout: '60'
   name: "kube_prod"
 
