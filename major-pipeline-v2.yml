@@ -49,7 +49,7 @@ stages:
 
     - task: CmdLine@2
       inputs:
-        script: 'echo $(curl.lastexitcode)'
+        script: 'echo $(curl.output)'
     - task: Kubernetes@1
       name: deleteqal
       condition: succeeded()
