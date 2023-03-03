@@ -11,6 +11,10 @@ pool:
 
 steps:
 
+- task: CmdLine@2
+  inputs:
+    script: 'find'
+
 # - task: Kubernetes@1
 #   inputs:
 #     connectionType: 'Kubernetes Service Connection'
