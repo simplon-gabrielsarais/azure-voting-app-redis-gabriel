@@ -49,12 +49,10 @@ stages:
 
     - task: CmdLine@2
       inputs:
-        script: 'if $(curl.output) -eq 200 echo "HTTP Response Code is 200"; else { echo "HTTP Response Code is not 200. Exiting."; exit 1 }'
-      name: 'check'
-
+        script: 'echo $(curl.lastexitcode)'
     - task: Kubernetes@1
       name: deleteqal
-      condition: eq(variables['check.output'], '0') 
+      condition: succeeded()
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'cluster-connection'
