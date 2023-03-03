@@ -15,7 +15,7 @@ stages:
         containerRegistry: 'dockerhub connection'
         repository: 'thjulian23/brief-8-tj-2'
         command: 'buildAndPush'
-        Dockerfile: './Dockerfile'
+        Dockerfile: 'Dockerfile'
         tags: 'latest'
 
 
