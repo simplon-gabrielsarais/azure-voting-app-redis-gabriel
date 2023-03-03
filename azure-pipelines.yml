@@ -74,7 +74,6 @@ steps:
     command: 'get'
     useConfigurationFile: true
     configuration: './qal/voteapp_qal.yml'
-    arguments: 'pod'
   name: kubepods
 
 # - task: CmdLine@2
