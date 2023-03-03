@@ -144,8 +144,14 @@ stages:
         script: |
           exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
           echo "##vso[task.setvariable variable=exit]$exitcode"
-      
+
     - task: Bash@3
+      name: waitingfordeploy
+      inputs:
+        targetType: 'inline'
+        script: 'sleep 30'
+    - task: Bash@3
+      name: yourverygood
       condition: eq(variables['exit'],'200')
       inputs:
         targetType: 'inline'
