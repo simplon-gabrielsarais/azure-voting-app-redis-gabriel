@@ -58,6 +58,11 @@ stages:
         namespace: 'qal'
         command: 'delete'
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal/'
+    - task: CmdLine@2
+      condition: succeeded()
+      inputs:
+        script: 'echo"QAL deleted"'
+
 
 - stage: 'Deploy_canary'
   condition: succeeded() 
