@@ -72,7 +72,7 @@ steps:
     kubernetesServiceEndpoint: 'connexion'
     namespace: 'qal'
     command: 'get'
-    arguments: 'pod.items.metadata.name"'
+    arguments: 'pod.metadata.name"'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
   name: kubepods
