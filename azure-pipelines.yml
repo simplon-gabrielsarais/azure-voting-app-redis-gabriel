@@ -60,11 +60,11 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      seq 250 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=kebab' http://qal.distributeur-de-pain.best"
+      seq 20 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=kebab' http://qal.distributeur-de-pain.best"
 
-- task: CmdLine@2
-  inputs:
-    script: 'sleep 50'
+# - task: CmdLine@2
+#   inputs:
+#     script: 'sleep 50'
 
 - task: Kubernetes@1
   inputs:
