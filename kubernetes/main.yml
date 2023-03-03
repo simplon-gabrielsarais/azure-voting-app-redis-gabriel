@@ -49,7 +49,8 @@ metadata:
     kubernetes.io/ingress.class: azure/application-gateway
 spec:
   rules:
-  - http:
+  - host: votingappkube.simplon-thomas.space
+    http:
       paths:
       - pathType: Prefix
         path: /
