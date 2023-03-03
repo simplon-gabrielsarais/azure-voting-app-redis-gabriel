@@ -40,7 +40,20 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'sleep 30'
+      
+    - task: CmdLine@2
+      inputs:
+        script: 'curl -iF "vote=free" http://qalvotingapp.simplon-thomas.space/'
 
+    - task: Kubernetes@1
+      name: deleteqal
+      condition: succeeded()
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'cluster-connection'
+        namespace: 'qal'
+        command: 'delete'
+        arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal/'
 
 - stage: 'Deploy_canary'
   condition: succeeded() 
