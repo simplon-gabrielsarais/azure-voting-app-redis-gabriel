@@ -91,7 +91,7 @@ steps:
     kubernetesServiceConnection: 'connexion'
     namespace: 'prod'
     strategy: 'canary'
-    percentage: '30'
+    percentage: '50'
     manifests: '**/kube_brief6/*'
     rolloutStatusTimeout: '60'
   name: "kube_prod"
