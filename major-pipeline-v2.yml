@@ -9,14 +9,14 @@ stages:
     displayName: 'Docker Image Build' 
     pool:
       vmImage: ubuntu-latest 
-    steps:
-  - task: Docker@2
-    condition: ne(variables['verrep'],variables['vernew'])
-    inputs:
-      containerRegistry: 'dockerhub connection'
-      repository: 'thjulian23/brief-8-tj-2'
-      command: 'buildAndPush'
-      Dockerfile: 'Dockerfile'
+      steps:
+      - task: Docker@2
+        condition: ne(variables['verrep'],variables['vernew'])
+        inputs:
+          containerRegistry: 'dockerhub connection'
+          repository: 'thjulian23/brief-8-tj-2'
+          command: 'buildAndPush'
+          Dockerfile: 'Dockerfile'
 
 
 - stage: 'QAL_Deployment' 
@@ -27,16 +27,14 @@ stages:
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
-  - task: KubernetesManifest@0
-    name: kubeonqal
-    displayName: 'kubeonqal'
-    inputs:
-      action: 'deploy'
-      kubernetesServiceConnection: 'cluster-connection'
-      namespace: 'qal'
-      manifests: '**/kubernetes/qal/*'
-  - task : test
-  - task : test
+    - task: KubernetesManifest@0
+      name: kubeonqal
+      displayName: 'kubeonqal'
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'cluster-connection'
+        namespace: 'qal'
+        manifests: '**/kubernetes/qal/*'
 
 
 - stage: 'Deploy_canary' 
@@ -47,26 +45,25 @@ stages:
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
-  - task: KubernetesManifest@0
-    name: kubeonprodcanary
-    condition: succeeded()
-    inputs:
-      action: 'deploy'
-      kubernetesServiceConnection: 'cluster-connection'
-      namespace: 'prod'
-      strategy: 'canary'
-      percentage: '50'
-      manifests: '**/kubernetes/canary/deployment-canary.yaml'
-  - task : test
-  - task : test
-  - task: Kubernetes@1
-    name: deletekubeqal
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'cluster-connection'
-      namespace: 'qal'
-      command: 'delete'
-      arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal'
+    - task: KubernetesManifest@0
+      name: kubeonprodcanary
+      condition: succeeded()
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'cluster-connection'
+        namespace: 'prod'
+        strategy: 'canary'
+        percentage: '50'
+        manifests: '**/kubernetes/canary/deployment-canary.yaml'
+
+    - task: Kubernetes@1
+      name: deletekubeqal
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'cluster-connection'
+        namespace: 'qal'
+        command: 'delete'
+        arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal'
 
 
 - stage: 'ManualIntervention' 
@@ -95,19 +92,19 @@ stages:
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
-  - task: Kubernetes@1
-    name: deletecanary
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'cluster-connection'
-      namespace: 'prod'
-      command: 'delete'
-      arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/canary/deletion-canary.yml'
-  - task: KubernetesManifest@0
-    name: kubeonprod
-    condition: succeeded()
-    inputs:
-      action: 'deploy'
-      kubernetesServiceConnection: 'cluster-connection'
-      namespace: 'prod'
-      manifests: '**/kubernetes/main.yml'
+    - task: Kubernetes@1
+      name: deletecanary
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'cluster-connection'
+        namespace: 'prod'
+        command: 'delete'
+        arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/canary/deletion-canary.yml'
+    - task: KubernetesManifest@0
+      name: kubeonprod
+      condition: succeeded()
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'cluster-connection'
+        namespace: 'prod'
+        manifests: '**/kubernetes/main.yml'
