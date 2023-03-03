@@ -73,7 +73,7 @@ steps:
     namespace: 'qal'
     command: 'get'
     useConfigurationFile: true
-    configuration: '**/qal/voteapp-qal.yml'
+    configuration: 'qal/voteapp-qal.yml'
     arguments: 'pod -f voteapp-qal.yml'
   name: kubepods
 
