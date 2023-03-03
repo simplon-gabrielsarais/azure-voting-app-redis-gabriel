@@ -79,7 +79,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq -R '.items[0].spec.replicas')
+      voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq '.items[0].spec.replicas')
       echo $voteappcount
       echo $KUBEPODS_KUBECTLOUTPUT
       echo "##vso[task.setvariable variable=appcnt]$voteappcount"
