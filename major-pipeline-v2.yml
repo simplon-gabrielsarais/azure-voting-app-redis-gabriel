@@ -103,7 +103,14 @@ stages:
       vmImage: 'ubuntu-latest' 
     steps:
 
-
+    - task: Kubernetes@1
+      name: deleteprodapp
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'cluster-connection'
+        namespace: 'prod'
+        command: 'delete'
+        arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/prod/deploy_app.yml'
       
 
     - task: KubernetesManifest@0
