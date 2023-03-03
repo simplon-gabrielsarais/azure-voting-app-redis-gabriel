@@ -8,7 +8,11 @@ import uuid
 
 
 app = Flask(__name__)
+<<<<<<< HEAD
 ver = "1.0.100"
+=======
+ver = "1.0.100"
+>>>>>>> b5d508516efd06c32d1158a38efaaf10b0e5fe65
 
 button1 = "free"
 button2 = "m6mobile"
