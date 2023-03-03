@@ -1,0 +1,113 @@
+trigger:
+- master
+
+stages:
+- stage: 'Build_docker_image' 
+  displayName: 'Build_docker_image' 
+  jobs:
+  - job: 'Build_Docker_image' 
+    displayName: 'Docker Image Build' 
+    pool:
+      vmImage: ubuntu-latest 
+    steps:
+  - task: Docker@2
+    condition: ne(variables['verrep'],variables['vernew'])
+    inputs:
+      containerRegistry: 'dockerhub connection'
+      repository: 'thjulian23/brief-8-tj-2'
+      command: 'buildAndPush'
+      Dockerfile: 'Dockerfile'
+
+
+- stage: 'QAL_Deployment' 
+  displayName: 'Deploy on QAL' 
+  jobs:
+  - job: 'QAL_Deploy' 
+    displayName: 'Deploy on QAL' 
+    pool:
+      vmImage: 'ubuntu-latest' 
+    steps:
+  - task: KubernetesManifest@0
+    name: kubeonqal
+    displayName: 'kubeonqal'
+    inputs:
+      action: 'deploy'
+      kubernetesServiceConnection: 'cluster-connection'
+      namespace: 'qal'
+      manifests: '**/kubernetes/qal/*'
+  - task : test
+  - task : test
+
+
+- stage: 'Deploy_canary' 
+  displayName: 'Deploy Canary Release' 
+  jobs:
+  - job: 'Deploy_canary' 
+    displayName: 'Deployment of Canary Release' 
+    pool:
+      vmImage: 'ubuntu-latest' 
+    steps:
+  - task: KubernetesManifest@0
+    name: kubeonprodcanary
+    condition: succeeded()
+    inputs:
+      action: 'deploy'
+      kubernetesServiceConnection: 'cluster-connection'
+      namespace: 'prod'
+      strategy: 'canary'
+      percentage: '50'
+      manifests: '**/kubernetes/canary/deployment-canary.yaml'
+  - task : test
+  - task : test
+  - task: Kubernetes@1
+    name: deletekubeqal
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'cluster-connection'
+      namespace: 'qal'
+      command: 'delete'
+      arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal'
+
+
+- stage: 'ManualIntervention' 
+  displayName: 'In waiting of validation of working canary release' 
+  jobs:
+  - job: waitForValidation
+    displayName: Wait for external validation
+    pool: server
+    timeoutInMinutes: 4320 # job times out in 3 days
+    steps:
+    - task: ManualValidation@0
+      timeoutInMinutes: 1440 # task times out in 1 day
+      inputs:
+        notifyUsers: |
+          tjulian.ext@simplonformations.onmicrosoft.com
+        instructions: 'Please validate the build configuration and resume'
+        onTimeout: 'resume'
+
+
+
+- stage: 'DeployOnProd' 
+  displayName: 'Deploy on Prod and delete Canary' 
+  jobs:
+  - job: 'Deployonprod' 
+    displayName: 'Deploy on Prod and delete Canary' 
+    pool:
+      vmImage: 'ubuntu-latest' 
+    steps:
+  - task: Kubernetes@1
+    name: deletecanary
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'cluster-connection'
+      namespace: 'prod'
+      command: 'delete'
+      arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/canary/deletion-canary.yml'
+  - task: KubernetesManifest@0
+    name: kubeonprod
+    condition: succeeded()
+    inputs:
+      action: 'deploy'
+      kubernetesServiceConnection: 'cluster-connection'
+      namespace: 'prod'
+      manifests: '**/kubernetes/main.yml'
