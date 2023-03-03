@@ -8,6 +8,10 @@ spec:
   rules:
   - http:
       paths:
-      - backend:
-          serviceName: clustvoteapp
-          servicePort: 85
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: clustvoteapp
+            port:
+              number: 85
