@@ -58,16 +58,6 @@ stages:
         percentage: '50'
         manifests: '**/kubernetes/canary/deployment-canary.yaml'
 
-    - task: Kubernetes@1
-      name: deletekubeqal
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'cluster-connection'
-        namespace: 'qal'
-        command: 'delete'
-        arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal'
-
-
 - stage: 'ManualIntervention'
   condition: succeeded() 
   displayName: 'In waiting of validation of working canary release' 
