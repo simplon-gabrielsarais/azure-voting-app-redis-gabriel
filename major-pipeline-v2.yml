@@ -36,7 +36,15 @@ stages:
         kubernetesServiceConnection: 'cluster-connection'
         namespace: 'qal'
         manifests: '**/kubernetes/qal/*'
-
+    
+    - task: Kubernetes@1
+      name: deleteqal
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'cluster-connection'
+        namespace: 'qal'
+        command: 'delete'
+        arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal/'
 
 - stage: 'Deploy_canary'
   condition: succeeded() 
