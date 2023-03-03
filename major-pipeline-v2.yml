@@ -120,7 +120,7 @@ stages:
         action: 'deploy'
         kubernetesServiceConnection: 'cluster-connection'
         namespace: 'prod'
-        manifests: '**/kubernetes/deploy_app.yml'
+        manifests: '**/kubernetes/prod/deploy_app.yml'
 
     - task: Kubernetes@1
       name: deletecanary
