@@ -44,7 +44,7 @@ stages:
       
     - task: CmdLine@2
       inputs:
-        script: 'curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space'
+        script: 'curl -s -o -I -w "%{http_code}" http://qalvotingapp.simplon-thomas.space'
       name: 'curl'
 
     - task: CmdLine@2
