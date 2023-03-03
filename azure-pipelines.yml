@@ -82,6 +82,7 @@ steps:
     script: |
       voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq '.items[] | select(.metadata.name | startswith("voteapp")) | .metadata.name' | wc -l)
       echo $voteappcount
+      echo $KUBEPODS_KUBECTLOUTPUT
       echo "##vso[task.setvariable variable=appcnt]$voteappcount"
 
 - task: KubernetesManifest@0
