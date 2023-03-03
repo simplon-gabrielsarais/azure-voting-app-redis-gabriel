@@ -76,7 +76,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq '.items[] | select(.metadata.name | startswith("voteapp")) | length')
+      voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq '.items[] | select(.metadata.name | startswith("voteapp")) | .metadata.name' | wc -l)
       echo $voteappcount
 
 - task: KubernetesManifest@0
