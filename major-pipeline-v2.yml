@@ -42,23 +42,29 @@ stages:
         targetType: 'inline'
         script: 'sleep 30'
       
-    - task: CmdLine@2
+    - task: Bash@3
       inputs:
-        script: 'curl -s -o -I -w "%{http_code}" http://qalvotingapp.simplon-thomas.space'
-      name: 'curl'
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -s -o -I -w "%{http_code}" http://qalvotingapp.simplon-thomas.space)
+          echo "##vso[task.setvariable variable=exit]$exitcode"
 
-    - task: CmdLine@2
-      inputs:
-        script: 'echo $(curl.output)'
     - task: Kubernetes@1
       name: deleteqal
-      condition: succeeded()
+      condition: eq(variables['exit'],'200')
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'cluster-connection'
         namespace: 'qal'
         command: 'delete'
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal/'
+    - task: Bash@3
+      name: yourverygood
+      condition: succeeded()
+      inputs:
+        targetType: 'inline'
+        script: 'echo "QAL DELETION"'
+
 
 - stage: 'Deploy_canary'
   condition: succeeded() 
@@ -129,9 +135,31 @@ stages:
 
     - task: Kubernetes@1
       name: deletecanary
+      condition: succeeded()
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'cluster-connection'
         namespace: 'prod'
         command: 'delete'
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/canary/deletion-canary.yml'
+
+    - task: Bash@3
+      name: waitingfordeploy
+      inputs:
+        targetType: 'inline'
+        script: 'sleep 30'
+
+    - task: Bash@3
+      name: checksite
+      condition: succeeded()
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
+          echo "##vso[task.setvariable variable=exit]$exitcode"
+    - task: Bash@3
+      name: yourverygood
+      condition: eq(variables['exit'],'200')
+      inputs:
+        targetType: 'inline'
+        script: 'echo "GOOD JOB PIPELINE!"'
