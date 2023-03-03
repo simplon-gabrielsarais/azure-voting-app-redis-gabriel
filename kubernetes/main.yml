@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: voteapp
-        image: thjulian23/brief-8-tj-2:{{ version }}
+        image: thjulian23/brief-8-tj-2:latest
         ports:
         - containerPort: 80
         resources:
