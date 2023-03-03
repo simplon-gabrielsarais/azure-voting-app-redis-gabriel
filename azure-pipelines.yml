@@ -76,15 +76,8 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      voteapp=0
-      jsonscale=$(echo $KUBEPODS_KUBECTLOUTPUT
-      foreach n (echo $jsonscale | jq '.items[]' ))
-      foreach? if [echo $jsonscale | jq -r '.items[$n].metadata.name'|awk -F- {'print $1'} == "voteapp"];
-      then
-          $voteapp++
-      fi
-      foreach? end
-      echo $voteapp
+      voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq '.items[] | select(.metadata.name | startswith("voteapp")) | length')
+      echo $voteappcount
 
 - task: KubernetesManifest@0
   condition: ne(variables['verold'],variables['vernew'])
