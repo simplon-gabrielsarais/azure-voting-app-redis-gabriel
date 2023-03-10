@@ -7,8 +7,8 @@ trigger:
 - master
 
 stages:
-- stage: 'Get-Versions' 
-  displayName: 'Get-Versions' 
+- stage: 'Get_Versions' 
+  displayName: 'Get_Versions' 
   jobs:
   - job: 'Get-Versions' 
     displayName: 'Get-Versions' 
@@ -117,12 +117,12 @@ stages:
           echo $voteappcount
           echo "##vso[task.setvariable variable=appcnt]$voteappcount"
 
-- stage: 'Canary-deploy'
+- stage: 'Canary_deploy'
   condition: gt(variables['appcnt'],2)
-  displayName: 'Canary-deploy' 
+  displayName: 'Canary_deploy' 
   jobs:
   - job: 'canary' 
-    displayName: 'Canary-deploy' 
+    displayName: 'Canary_deploy' 
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
@@ -165,7 +165,7 @@ stages:
     steps:
 
     - task: KubernetesManifest@0
-      name: "delete-canary"
+      name: "delete_canary"
       condition: gt(variables['appcnt'],2)
       inputs:
         action: 'deploy'
@@ -177,7 +177,7 @@ stages:
         rolloutStatusTimeout: '60'
 
     - task: KubernetesManifest@0
-      name: "kube_qal-del"
+      name: "kube_qal_del"
       inputs:
         action: 'delete'
         kubernetesServiceConnection: 'connexion'
