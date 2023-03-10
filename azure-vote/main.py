@@ -8,7 +8,7 @@ import uuid
 
 
 app = Flask(__name__)
-ver = "1.0.120"
+ver = "1.0.121"
 
 button1 = "kebab"
 button2 = "pizza"
