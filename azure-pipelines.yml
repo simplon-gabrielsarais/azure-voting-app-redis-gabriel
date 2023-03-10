@@ -10,8 +10,8 @@ stages:
 - stage: 'Get_Versions' 
   displayName: 'Get_Versions' 
   jobs:
-  - job: 'Get-Versions' 
-    displayName: 'Get-Versions' 
+  - job: 'Get_Versions' 
+    displayName: 'Get_Versions' 
     pool:
       vmImage: ubuntu-latest
     steps:
