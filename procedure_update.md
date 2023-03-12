@@ -7,10 +7,10 @@
 ## Première étape : Lancement du Pipeline
 
 Dès qu'un push sera effectué sur le repository, la pipeline se lancera.
-Il est important de modifier le numéro de verion dans le code de l'application de vote, sans quoi la pipeline se lancera sans mettre a jour le container, ni sur registry, ni sur l'aks.
+Il est important de modifier le numéro de version dans le code de l'application de vote, sans quoi la pipeline se lancera sans mettre à jour le container, ni sur registry, ni sur l'aks.
 
 ## Deuxième étape: Validation Manuel
-Après que tous les tests ai été effecté par la pipeline un mail sera envoyé au responsable de cette dernière (gabriel sarais) pour une validation manuel afin de finaliser le déploiment en production.
+Après que tous les tests ai été effectué par la pipeline un mail sera envoyé au responsable de cette dernière (gabriel sarais) pour une validation manuel afin de finaliser le déploiment en production.
 
 → Rendez vous sur l'adresse https://dev.azure.com/ avec le navigateur web de votre choix et vous connecter avec votre compte Azure
 
