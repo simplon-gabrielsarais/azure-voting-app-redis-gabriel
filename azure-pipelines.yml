@@ -39,7 +39,7 @@ stages:
           sed -i 's/{{ version }}/'$versionnew'/g' qal/voteapp_qal.yml
         #  sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
         #  sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
-      name: "scritver"
+      name: "scriptver"
 
 
 - stage: 'Build_docker_image'
