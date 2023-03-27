@@ -60,7 +60,7 @@ stages:
     - task: CmdLine@2
       name: waitforcharge
       inputs:
-        script: 'sleep 120'
+        script: 'sleep 50'
 
     - task: Kubernetes@1
       inputs:
@@ -207,7 +207,7 @@ stages:
     - task: CmdLine@2
       name: waitforcharge
       inputs:
-        script: 'sleep 120'
+        script: 'sleep 50'
 
     - task: Kubernetes@1
       inputs:
