@@ -28,7 +28,6 @@ stages:
 
     - task: CmdLine@2
       inputs:
-      name: "scritver"
         script: |
           versionrep=$((curl 'https://hub.docker.com/v2/repositories/grabibel/voteapp_brief8_gs/tags' | jq '."results"[0]["name"]')| sed 's/^"//;s/"$//')
           versionold=$(echo $KUBEINFO_KUBECTLOUTPUT | jq '.items[1].spec.template.spec.containers[].image' | cut -d: -f2 | sed 's/"//')
@@ -40,7 +39,7 @@ stages:
           sed -i 's/{{ version }}/'$versionnew'/g' qal/voteapp_qal.yml
         #  sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
         #  sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
-
+      name: "scritver"
 
 
 - stage: 'Build_docker_image' 
