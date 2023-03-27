@@ -60,7 +60,7 @@ stages:
     - task: CmdLine@2
       name: waitforcharge
       inputs:
-        script: 'sleep 50'
+        script: 'sleep 90'
 
     - task: Kubernetes@1
       inputs:
@@ -207,7 +207,7 @@ stages:
     - task: CmdLine@2
       name: waitforcharge
       inputs:
-        script: 'sleep 50'
+        script: 'sleep 90'
 
     - task: Kubernetes@1
       inputs:
@@ -215,7 +215,8 @@ stages:
         kubernetesServiceEndpoint: 'clusterconnection'
         namespace: 'prod'
         command: 'get'
-        arguments: 'pods'
+        useConfigurationFile: true
+        configuration: './kubernetes/prod/deploy_app.yml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
       name: prodpods
