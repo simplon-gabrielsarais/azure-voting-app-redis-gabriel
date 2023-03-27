@@ -33,7 +33,7 @@ stages:
       displayName: 'kubeonqal'
       inputs:
         action: 'deploy'
-        kubernetesServiceConnection: 'cluster-connection'
+        kubernetesServiceConnection: 'clusterconnection'
         namespace: 'qal'
         manifests: '**/kubernetes/qal/*'
     - task: Bash@3
@@ -65,11 +65,13 @@ stages:
     - task: Kubernetes@1
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'connexion'
+        kubernetesServiceEndpoint: 'clusterconnection'
         namespace: 'qal'
         command: 'get'
         useConfigurationFile: true
         configuration: './kubernetes/qal/qal_app.yml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
       name: qalpods
 
     - task: CmdLine@2
@@ -85,10 +87,12 @@ stages:
       condition: ne(variables['countpods'],2)
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'cluster-connection'
+        kubernetesServiceEndpoint: 'clusterconnection'
         namespace: 'qal'
         command: 'delete'
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal/'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
     - task: Bash@3
       name: yourverygood
       condition: succeeded()
@@ -111,7 +115,7 @@ stages:
       condition: succeeded()
       inputs:
         action: 'deploy'
-        kubernetesServiceConnection: 'cluster-connection'
+        kubernetesServiceConnection: 'clusterconnection'
         namespace: 'prod'
         strategy: 'canary'
         percentage: '30'
@@ -149,10 +153,12 @@ stages:
       name: deleteprodapp
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'cluster-connection'
+        kubernetesServiceEndpoint: 'clusterconnection'
         namespace: 'prod'
         command: 'delete'
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/prod/deploy_app.yml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
       
 
     - task: KubernetesManifest@0
@@ -160,7 +166,7 @@ stages:
       condition: succeeded()
       inputs:
         action: 'deploy'
-        kubernetesServiceConnection: 'cluster-connection'
+        kubernetesServiceConnection: 'clusterconnection'
         namespace: 'prod'
         manifests: '**/kubernetes/prod/deploy_app.yml'
 
@@ -169,10 +175,12 @@ stages:
       condition: succeeded()
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'cluster-connection'
+        kubernetesServiceEndpoint: 'clusterconnection'
         namespace: 'prod'
         command: 'delete'
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/canary/deletion-canary.yml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
 
     - task: Bash@3
       name: waitingfordeploy
@@ -204,11 +212,13 @@ stages:
     - task: Kubernetes@1
       inputs:
         connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'cluster-connection'
+        kubernetesServiceEndpoint: 'clusterconnection'
         namespace: 'prod'
         command: 'get'
         useConfigurationFile: true
         configuration: './kubernetes/prod/deploy_app.yml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
       name: prodpods
 
     - task: CmdLine@2
