@@ -133,7 +133,7 @@ stages:
 
 - stage: 'Canary_deploy'
   dependsOn:
-  - GetPodsCount
+  - Test_Charge
   condition: gt(dependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
   displayName: 'Canary_deploy' 
   jobs:
@@ -173,7 +173,7 @@ stages:
 
 - stage: 'DeployOnProd'
   dependsOn:
-  - GetPodsCount
+  - Test_Charge
   displayName: 'Deploy on Prod and delete qal and Canary' 
   jobs:
   - job: 'Deployonprod' 
