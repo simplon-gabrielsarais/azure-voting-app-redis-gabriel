@@ -53,7 +53,7 @@ stages:
       vmImage: ubuntu-latest 
     steps:
     - task: Docker@2
-      condition: ne(stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep'],stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'])
+      condition: ne(dependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep'],stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'])
       inputs:
         containerRegistry: 'voteapp_Brief8_GS'
         repository: 'grabibel/voteapp_brief8_gs'
