@@ -42,7 +42,9 @@ stages:
       name: "scritver"
 
 
-- stage: 'Build_docker_image' 
+- stage: 'Build_docker_image'
+  dependsOn:
+  - Get_Versions
   displayName: 'Build_docker_image' 
   jobs:
   - job: 'Docker_image' 
@@ -62,6 +64,8 @@ stages:
 
 
 - stage: 'QAL_Deployment'
+  dependsOn:
+  - Get_Versions
   condition: succeeded()
   displayName: 'Deploy on QAL' 
   jobs:
@@ -118,6 +122,8 @@ stages:
           echo "##vso[task.setvariable variable=appcnt]$voteappcount"
 
 - stage: 'Canary_deploy'
+  dependsOn:
+  - GetPodsCount
   condition: gt(stageDepencies.Test_Charge.GetPodsCount.outputs['GetPodsCount.voteappcount'],2)
   displayName: 'Canary_deploy' 
   jobs:
@@ -127,7 +133,7 @@ stages:
       vmImage: 'ubuntu-latest' 
     steps:
     - task: KubernetesManifest@0
-      condition: gt(variables['appcnt'],2)
+      condition: gt(stageDepencies.Test_Charge.GetPodsCount.outputs['GetPodsCount.voteappcount'],2)
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
@@ -156,6 +162,8 @@ stages:
         onTimeout: 'resume'
 
 - stage: 'DeployOnProd'
+  dependsOn:
+  - GetPodsCount
   displayName: 'Deploy on Prod and delete qal and Canary' 
   jobs:
   - job: 'Deployonprod' 
@@ -166,7 +174,7 @@ stages:
 
     - task: KubernetesManifest@0
       name: "delete_canary"
-      condition: gt(variables['appcnt'],2)
+      condition: gt(stageDepencies.Test_Charge.GetPodsCount.outputs['GetPodsCount.voteappcount'],2)
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
