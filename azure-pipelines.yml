@@ -28,6 +28,7 @@ stages:
 
     - task: CmdLine@2
       inputs:
+      name: "scritver"
         script: |
           versionrep=$((curl 'https://hub.docker.com/v2/repositories/grabibel/voteapp_brief8_gs/tags' | jq '."results"[0]["name"]')| sed 's/^"//;s/"$//')
           versionold=$(echo $KUBEINFO_KUBECTLOUTPUT | jq '.items[1].spec.template.spec.containers[].image' | cut -d: -f2 | sed 's/"//')
@@ -51,7 +52,7 @@ stages:
       vmImage: ubuntu-latest 
     steps:
     - task: Docker@2
-      condition: ne(variables['verrep'],variables['vernew'])
+      condition: ne(stageDepencies.Get_Versions.Get_Versions.outputs['scriptver.verrep'],stageDepencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'])
       inputs:
         containerRegistry: 'voteapp_Brief8_GS'
         repository: 'grabibel/voteapp_brief8_gs'
@@ -72,7 +73,7 @@ stages:
     steps:
     - task: KubernetesManifest@0
       name: "kube_qal"
-      condition: ne(variables['verold'],variables['vernew'])
+      condition: ne(stageDepencies.Get_Versions.Get_Versions.outputs['scriptver.verold'],stageDepencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'])
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
@@ -111,6 +112,7 @@ stages:
 
     - task: CmdLine@2
       name: "GetPodsCount"
+      steps:
       inputs:
         script: |
           voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq '.items[0].spec.replicas')
@@ -118,7 +120,7 @@ stages:
           echo "##vso[task.setvariable variable=appcnt]$voteappcount"
 
 - stage: 'Canary_deploy'
-  condition: gt(variables['appcnt'],2)
+  condition: gt(stageDepencies.Test_Charge.GetPodsCount.outputs['GetPodsCount.voteappcount'],2)
   displayName: 'Canary_deploy' 
   jobs:
   - job: 'canary' 
