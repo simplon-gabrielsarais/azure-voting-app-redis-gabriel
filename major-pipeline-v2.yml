@@ -215,8 +215,7 @@ stages:
         kubernetesServiceEndpoint: 'clusterconnection'
         namespace: 'prod'
         command: 'get'
-        useConfigurationFile: true
-        configuration: './kubernetes/prod/main.yml'
+        arguments: 'pods'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
       name: prodpods
