@@ -71,6 +71,7 @@ stages:
 - stage: 'QAL_Deployment'
   dependsOn:
   - Get_Versions
+  - Build_docker_image
   condition: succeeded()
   displayName: 'Deploy on QAL' 
   jobs:
@@ -174,6 +175,7 @@ stages:
 - stage: 'DeployOnProd'
   dependsOn:
   - Test_Charge
+  - Canary_deploy
   displayName: 'Deploy on Prod and delete qal and Canary' 
   jobs:
   - job: 'Deployonprod' 
