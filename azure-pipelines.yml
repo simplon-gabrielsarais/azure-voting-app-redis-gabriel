@@ -48,11 +48,6 @@ stages:
   displayName: 'Build_docker_image' 
   jobs:
   - job: 'Docker_image'
-    variables:
-      - name: verrep
-        value: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep']]
-      - name: vernew
-        value: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
     displayName: 'Docker Image Build' 
     pool:
       vmImage: ubuntu-latest 
@@ -75,12 +70,7 @@ stages:
   condition: succeeded()
   displayName: 'Deploy on QAL' 
   jobs:
-  - job: 'QAL_Deploy' 
-    variables:
-      - name: verold
-        value: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
-      - name: vernew
-        value: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
+  - job: 'QAL_Deploy'
     displayName: 'Deploy on QAL' 
     pool:
       vmImage: 'ubuntu-latest' 
