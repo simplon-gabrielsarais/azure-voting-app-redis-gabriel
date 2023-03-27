@@ -216,7 +216,7 @@ stages:
         namespace: 'prod'
         command: 'get'
         useConfigurationFile: true
-        configuration: './kubernetes/prod/deploy_app.yml'
+        configuration: './kubernetes/prod/main.yml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
       name: prodpods
