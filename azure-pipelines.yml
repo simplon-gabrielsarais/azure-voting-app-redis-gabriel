@@ -124,7 +124,7 @@ stages:
 - stage: 'Canary_deploy'
   dependsOn:
   - GetPodsCount
-  condition: gt(stageDepencies.Test_Charge.GetPodsCount.outputs['GetPodsCount.voteappcount'],2)
+  condition: gt(stageDepencies.Test_Charge.Test.outputs['GetPodsCount.voteappcount'],2)
   displayName: 'Canary_deploy' 
   jobs:
   - job: 'canary' 
@@ -133,7 +133,7 @@ stages:
       vmImage: 'ubuntu-latest' 
     steps:
     - task: KubernetesManifest@0
-      condition: gt(stageDepencies.Test_Charge.GetPodsCount.outputs['GetPodsCount.voteappcount'],2)
+      condition: gt(stageDepencies.Test_Charge.Test.outputs['GetPodsCount.voteappcount'],2)
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
@@ -174,7 +174,7 @@ stages:
 
     - task: KubernetesManifest@0
       name: "delete_canary"
-      condition: gt(stageDepencies.Test_Charge.GetPodsCount.outputs['GetPodsCount.voteappcount'],2)
+      condition: gt(stageDepencies.Test_Charge.Test.outputs['GetPodsCount.voteappcount'],2)
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
