@@ -50,9 +50,9 @@ stages:
   - job: 'Docker_image'
     variables:
       - name: verrep
-        value: $[ stageDepencies.Get_Versions.Get_Versions.outputs['scriptver.verrep']]
+        value: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep']]
       - name: vernew
-        value: $[ stageDepencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
+        value: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
     displayName: 'Docker Image Build' 
     pool:
       vmImage: ubuntu-latest 
@@ -77,9 +77,9 @@ stages:
   - job: 'QAL_Deploy' 
     variables:
       - name: verold
-        value: $[ stageDepencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
+        value: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
       - name: vernew
-        value: $[ stageDepencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
+        value: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
     displayName: 'Deploy on QAL' 
     pool:
       vmImage: 'ubuntu-latest' 
@@ -134,7 +134,7 @@ stages:
 - stage: 'Canary_deploy'
   dependsOn:
   - GetPodsCount
-  condition: gt(Depencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
+  condition: gt(dependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
   displayName: 'Canary_deploy' 
   jobs:
   - job: 'canary' 
@@ -143,7 +143,7 @@ stages:
       vmImage: 'ubuntu-latest' 
     steps:
     - task: KubernetesManifest@0
-      condition: gt(stageDepencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
+      condition: gt(stageDependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
@@ -184,7 +184,7 @@ stages:
 
     - task: KubernetesManifest@0
       name: "delete_canary"
-      condition: gt(stageDepencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
+      condition: gt(stageDependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
