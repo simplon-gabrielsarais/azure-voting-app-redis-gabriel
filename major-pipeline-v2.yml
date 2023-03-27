@@ -225,7 +225,7 @@ stages:
       name: countpod
       inputs:
         script: |
-          prodappcount=$(echo $PRODPODS_KUBECTLOUTPUT | jq '.items[0].spec.replicas')
+          prodappcount=$(echo $PRODPODS_KUBECTLOUTPUT | jq -j '.items | length')
           echo $prodappcount
           echo "##vso[task.setvariable variable=countpods]$prodappcount"
 
