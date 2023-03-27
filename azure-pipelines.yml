@@ -146,6 +146,8 @@ stages:
       name: "kube_prod"
 
 - stage: 'ManualIntervention'
+  dependsOn:
+  - Canary_deploy
   condition: succeeded() 
   displayName: 'In waiting of validation of working canary release' 
   jobs:
@@ -166,6 +168,7 @@ stages:
   dependsOn:
   - Test_Charge
   - Canary_deploy
+  - ManualIntervention
   displayName: 'Deploy on Prod and delete qal and Canary' 
   jobs:
   - job: 'Deployonprod' 
