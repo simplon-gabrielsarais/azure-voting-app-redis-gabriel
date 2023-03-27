@@ -111,7 +111,6 @@ stages:
 
     - task: CmdLine@2
       name: "GetPodsCount"
-      steps:
       inputs:
         script: |
           voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq '.items[0].spec.replicas')
