@@ -43,7 +43,7 @@ stages:
         script: 'sleep 30'
       
     - task: Bash@3
-      name: checksite
+      name: checksitefreevote
       displayName: Test de la requête pour voter free
       condition: succeeded()
       inputs:
@@ -53,7 +53,7 @@ stages:
           echo "##vso[task.setvariable variable=exit1]$exitcode"
 
     - task: Bash@3
-      name: checksite
+      name: checksitem6mobilevote
       displayName: Test de la requête pour voter m6mobile
       condition: eq(variables['exit1'],'200')
       inputs:
@@ -63,7 +63,7 @@ stages:
           echo "##vso[task.setvariable variable=exit2]$exitcode"
 
     - task: Bash@3
-      name: checksite
+      name: checksitereset
       displayName: Test de la requête pour reset
       condition: eq(variables['exit2'],'200')
       inputs:
@@ -212,7 +212,7 @@ stages:
         containerRegistryType: 'Azure Container Registry'
 
     - task: Bash@3
-      name: checksite
+      name: checksiteprod
       condition: succeeded()
       inputs:
         targetType: 'inline'
