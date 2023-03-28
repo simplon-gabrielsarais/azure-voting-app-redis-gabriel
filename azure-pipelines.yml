@@ -59,16 +59,15 @@ stages:
     - task: CmdLine@2
       inputs:
         script: 'echo "$(verrep) $(vernew)"'
-
     - task: Docker@2
-    condition: ne(variables.verrep,variables.vernew)
-    inputs:
-      containerRegistry: 'voteapp_Brief8_GS'
-      repository: 'grabibel/voteapp_brief8_gs'
-      command: 'buildAndPush'
-      Dockerfile: '**/Dockerfile'
-      tags: $(vernew)
-    name: "dockerhub_publish"
+      condition: ne(variables.verrep,variables.vernew)
+      inputs:
+        containerRegistry: 'voteapp_Brief8_GS'
+        repository: 'grabibel/voteapp_brief8_gs'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: $(vernew)
+      name: "dockerhub_publish"
 
 
 - stage: 'QAL_Deployment'
