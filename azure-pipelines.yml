@@ -74,13 +74,16 @@ stages:
   displayName: 'Deploy on QAL' 
   jobs:
   - job: 'QAL_Deploy'
+    variables:
+      verold: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
+      vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
     displayName: 'Deploy on QAL' 
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
     - task: KubernetesManifest@0
       name: "kube_qal"
-      condition: ne(stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold'],stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'])
+      condition: ne(${{variables.verold}},${{variables.vernew}})
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
