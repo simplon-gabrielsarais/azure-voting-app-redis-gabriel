@@ -10,7 +10,7 @@ stages:
 - stage: 'Get_Versions' 
   displayName: 'Get_Versions' 
   jobs:
-  - job: 'Get_Versionsplus' 
+  - job: 'Get_Versions' 
     displayName: 'Get_Versions' 
     pool:
       vmImage: ubuntu-latest
@@ -50,12 +50,17 @@ stages:
   jobs:
   - job: 'Docker_image'
     variables:
-      verrep: $[ stageDependencies.Get_Versions.Get_Versionsplus.outputs['scriptver.verrep'] ]
-      vernew: $[ stageDependencies.Get_Versions.Get_Versionsplus.outputs['scriptver.vernew'] ]
+      verrep: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep'] ]
+      vernew: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'] ]
     displayName: 'Docker Image Build' 
     pool:
       vmImage: ubuntu-latest 
     steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+        echo $(verrep) $(vernew)
+      name: "ksksks"
     - task: Docker@2
       condition: ne(variables.verrep,variables.vernew)
       inputs:
@@ -76,8 +81,8 @@ stages:
   jobs:
   - job: 'QAL_Deploy'
     variables:
-      verold: $[stageDependencies.Get_Versions.Get_Versionsplus.outputs['scriptver.verold']]
-      vernew: $[stageDependencies.Get_Versions.Get_Versionsplus.outputs['scriptver.vernew']]
+      verold: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
+      vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
     displayName: 'Deploy on QAL' 
     pool:
       vmImage: 'ubuntu-latest' 
