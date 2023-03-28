@@ -221,7 +221,7 @@ stages:
           echo "##vso[task.setvariable variable=exits]$exitcodes"
     - task: Bash@3
       name: yourverygood
-      condition: eq(variables['exit4'],'200')
+      condition: eq(variables['exits'],'200')
       inputs:
         targetType: 'inline'
         script: 'echo "GOOD JOB PIPELINE!"'
