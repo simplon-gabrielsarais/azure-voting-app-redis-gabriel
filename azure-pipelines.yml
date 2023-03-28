@@ -58,7 +58,7 @@ stages:
     steps:
     - task: CmdLine@2
       inputs:
-        script: 'echo $(verrep) $(vernew)'
+        script: 'echo "$(verrep) $(vernew)"'
 
     - task: Docker@2
     condition: ne(variables.verrep,variables.vernew)
