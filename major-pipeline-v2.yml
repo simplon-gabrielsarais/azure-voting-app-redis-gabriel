@@ -217,11 +217,11 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          exitcodes=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
-          echo "##vso[task.setvariable variable=exits]$exitcodes"
+          exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
+          echo "##vso[task.setvariable variable=exit5]$exitcode"
     - task: Bash@3
       name: yourverygood
-      condition: eq(variables['exits'],'200')
+      condition: eq(variables['exit5'],'200')
       inputs:
         targetType: 'inline'
         script: 'echo "GOOD JOB PIPELINE!"'
