@@ -56,7 +56,7 @@ stages:
       vmImage: ubuntu-latest 
     steps:
     - task: Docker@2
-      condition: ne(${{variables.verrep}},${{variables.vernew}})
+      condition: ne(variables.verrep,variables.vernew)
       inputs:
         containerRegistry: 'voteapp_Brief8_GS'
         repository: 'grabibel/voteapp_brief8_gs'
@@ -83,7 +83,7 @@ stages:
     steps:
     - task: KubernetesManifest@0
       name: "kube_qal"
-      condition: ne(${{variables.verold}},${{variables.vernew}})
+      condition: ne(variables.verold,variables.vernew)
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
