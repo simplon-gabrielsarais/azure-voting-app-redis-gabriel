@@ -217,8 +217,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
-          echo "##vso[task.setvariable variable=exit4]$exitcode"
+          exitcode4=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
+          echo "##vso[task.setvariable variable=exit4]$exitcode4"
     - task: Bash@3
       name: yourverygood
       condition: eq(variables['exit4'],'200')
