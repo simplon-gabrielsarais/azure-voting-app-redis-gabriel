@@ -48,12 +48,15 @@ stages:
   displayName: 'Build_docker_image' 
   jobs:
   - job: 'Docker_image'
+  variables:
+  - verrep: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep']]
+  - vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
     displayName: 'Docker Image Build' 
     pool:
       vmImage: ubuntu-latest 
     steps:
     - task: Docker@2
-      condition: ne(dependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep'],stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'])
+      condition: ne($[variables.verrep],$[variables.vernew])
       inputs:
         containerRegistry: 'voteapp_Brief8_GS'
         repository: 'grabibel/voteapp_brief8_gs'
@@ -125,7 +128,7 @@ stages:
 - stage: 'Canary_deploy'
   dependsOn:
   - Test_Charge
-  condition: gt(dependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
+  condition: gt(dependencies.Test_Charge.outputs['Test.GetPodsCount.appcnt'],2)
   displayName: 'Canary_deploy' 
   jobs:
   - job: 'canary' 
