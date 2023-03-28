@@ -43,16 +43,39 @@ stages:
         script: 'sleep 30'
       
     - task: Bash@3
+      name: checksite
+      displayName: Test de la requête pour voter free
+      condition: succeeded()
       inputs:
         targetType: 'inline'
         script: |
-          exitcode=$(curl -s -o -I -w "%{http_code}" http://qalvotingapp.simplon-thomas.space)
-          echo "##vso[task.setvariable variable=exit]$exitcode"
+          exitcode=$(curl -X POST -d "vote=free" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
+          echo "##vso[task.setvariable variable=exit1]$exitcode"
 
+    - task: Bash@3
+      name: checksite
+      displayName: Test de la requête pour voter m6mobile
+      condition: eq(variables['exit1'],'200')
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -X POST -d "vote=m6mobile" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
+          echo "##vso[task.setvariable variable=exit2]$exitcode"
+
+    - task: Bash@3
+      name: checksite
+      displayName: Test de la requête pour reset
+      condition: eq(variables['exit2'],'200')
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -X POST -d "vote=reset" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
+          echo "##vso[task.setvariable variable=exit3]$exitcode"
 
     - task: CmdLine@2
       name : chargetest
-      condition: eq(variables['exit'],'200')
+      displayName: Test de charge de la qal
+      condition: eq(variables['exit3'],'200')
       inputs:
         script: |
           seq 250 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=free' http://qalvotingapp.simplon-thomas.space"
@@ -170,6 +193,12 @@ stages:
         namespace: 'prod'
         manifests: '**/kubernetes/prod/deploy_app.yml'
 
+    - task: Bash@3
+      name: waitingfordeploy
+      inputs:
+        targetType: 'inline'
+        script: 'sleep 30'
+
     - task: Kubernetes@1
       name: deletecanary
       condition: succeeded()
@@ -183,23 +212,16 @@ stages:
         containerRegistryType: 'Azure Container Registry'
 
     - task: Bash@3
-      name: waitingfordeploy
-      inputs:
-        targetType: 'inline'
-        script: 'sleep 30'
-
-    - task: Bash@3
       name: checksite
       condition: succeeded()
       inputs:
         targetType: 'inline'
         script: |
-          exitcode=$(curl -X POST -d "vote=free" http://votingappkube.simplon-thomas.space -w "%{http_code}" -o /dev/null)
-          echo "##vso[task.setvariable variable=exit]$exitcode"
-
+          exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
+          echo "##vso[task.setvariable variable=exit4]$exitcode"
     - task: Bash@3
       name: yourverygood
-      condition: eq(variables['exit'],'200')
+      condition: eq(variables['exit4'],'200')
       inputs:
         targetType: 'inline'
         script: 'echo "GOOD JOB PIPELINE!"'
