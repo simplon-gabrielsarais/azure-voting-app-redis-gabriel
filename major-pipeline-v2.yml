@@ -11,9 +11,6 @@ stages:
       vmImage: ubuntu-latest 
     steps:
 
-    - task: CmdLine@2
-      inputs:
-        script: 'echo "$(verrep) $(vernew)"'
     - task: Docker@2
       inputs:
         containerRegistry: 'dockerhub connection'
@@ -223,17 +220,10 @@ stages:
         script: |
           exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
           echo "##vso[task.setvariable variable=exit5]$exitcode"
-    - task: Bash@3
-      name: checksiteprod
-      condition: eq(variables['exit5'],'200')
-      inputs:
-        targetType: 'inline'
-        script: |
-          exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
-          echo "##vso[task.setvariable variable=exit6]$exitcode"
+
     - task: Bash@3
       name: yourverygood
-      condition: eq(variables['exit6'],'200')
+      condition: eq(variables['exit5'],'200')
       inputs:
         targetType: 'inline'
         script: 'echo "GOOD JOB PIPELINE!"'
