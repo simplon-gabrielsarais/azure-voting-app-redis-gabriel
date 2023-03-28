@@ -48,9 +48,9 @@ stages:
   displayName: 'Build_docker_image' 
   jobs:
   - job: 'Docker_image'
-  variables:
-    - verrep: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep']]
-    - vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
+    variables:
+      verrep: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep']]
+      vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
     displayName: 'Docker Image Build' 
     pool:
       vmImage: ubuntu-latest 
