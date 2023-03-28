@@ -5,6 +5,7 @@ stages:
 - stage: Build_docker_image
   displayName: 'Build_docker_image' 
   jobs:
+
   - job: Get_Version
     displayName: 'Get Version Build' 
     pool:
@@ -20,6 +21,7 @@ stages:
           echo "##vso[task.setvariable variable=vernew]$versionnew"
   
     - task: Docker@2
+      name: CreateDocImage
       condition: ne(variables.verold,variables.vernew)
       inputs:
         containerRegistry: 'dockerhub connection'
@@ -28,15 +30,9 @@ stages:
         Dockerfile: 'Dockerfile'
         tags: 'latest'
       
-    - bash: exit 1
-      displayName: Fail build if partially successful
-      condition: eq(variables['Agent.JobStatus'], 'SucceededWithIssues')
-
-
-
 - stage: 'QAL_Deployment'
   dependsOn: Build_docker_image
-  condition: succeeded()
+  condition: eq(dependencies.Get_Version.result,'Succeeded')
   displayName: 'Deploy on QAL' 
   jobs:
   - job: 'QAL_Deploy' 
