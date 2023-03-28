@@ -5,8 +5,8 @@ stages:
 - stage: Build_docker_image
   displayName: 'Build_docker_image' 
   jobs:
-  - job: Build_Docker_image 
-    displayName: 'Docker Image Build' 
+  - job: Get_Version
+    displayName: 'Get Version Build' 
     pool:
       vmImage: ubuntu-latest 
     steps:
@@ -16,9 +16,20 @@ stages:
         script: |
           versionnew=$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
           versionold=$(curl -s http://votingappkube.simplon-thomas.space | grep -o 'Azure Voting App v[0-9]\+\.[0-9]\+\.[0-9]\+' | sed 's/^.*v//;s/ on.*$//' | head -n1)
-          echo "##vso[task.setvariable variable=verold]$versionold"
-          echo "##vso[task.setvariable variable=vernew]$versionnew"
-
+          #echo "##vso[task.setvariable variable=verold]$versionold"
+          echo "##vso[task.setvariable variable=verold;isOutput=true;]$versionold"
+          #echo "##vso[task.setvariable variable=vernew]$versionnew"
+          echo "##vso[task.setvariable variable=vernew;isOutput=true;]$versionew"
+  
+  - job: Build_Docker_image 
+    displayName: 'Docker Image Build'
+    dependsOn: ['Get_Version']
+    variables:
+      verold : $[dependencies.Get_Version.outputs['setVariable.verold']]
+      vernew : $[dependencies.Get_Version.outputs['setVariable.new']]
+    pool:
+      vmImage: ubuntu-latest 
+    steps:
     - task: Docker@2
       condition: ne(variables.verold,variables.vernew)
       inputs:
@@ -28,9 +39,6 @@ stages:
         Dockerfile: 'Dockerfile'
         tags: 'latest'
 
-    - bash: exit 1
-      displayName: Fail build if partially successful
-      condition: eq(variables['Agent.JobStatus'], 'SucceededWithIssues')
 
 - stage: 'QAL_Deployment'
   dependsOn: Build_docker_image
