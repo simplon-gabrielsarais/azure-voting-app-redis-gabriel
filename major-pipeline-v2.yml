@@ -20,7 +20,7 @@ stages:
           echo "##vso[task.setvariable variable=verrep]$versionrep"
 
     - task: Docker@2
-      condition: ne(vernew,verrep)
+      condition: ne($vernew,$verrep)
       inputs:
         containerRegistry: 'dockerhub connection'
         repository: 'thjulian23/brief-8-tj-2'
