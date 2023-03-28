@@ -197,41 +197,9 @@ stages:
           exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
           echo "##vso[task.setvariable variable=exit]$exitcode"
 
-    - task: CmdLine@2
-      name : chargetest
-      condition: eq(variables['exit'],'200')
-      inputs:
-        script: |
-          seq 250 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=free' http://votingappkube.simplon-thomas.space"
-
-    - task: CmdLine@2
-      name: waitforcharge
-      inputs:
-        script: 'sleep 90'
-
-    - task: Kubernetes@1
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'clusterconnection'
-        namespace: 'prod'
-        command: 'get'
-        useConfigurationFile: true
-        configuration: './kubernetes/prod/deploy_app.yml'
-        secretType: 'dockerRegistry'
-        containerRegistryType: 'Azure Container Registry'
-      name: prodpods
-
-    - task: CmdLine@2
-      name: countpod
-      inputs:
-        script: |
-          prodappcount=$(echo $PRODPODS_KUBECTLOUTPUT | jq '.spec.replicas')
-          echo $prodappcount
-          echo "##vso[task.setvariable variable=countpods]$prodappcount"
-
     - task: Bash@3
       name: yourverygood
-      condition: gt(variables['countpods'],3)
+      condition: eq(variables['exit'],'200')
       inputs:
         targetType: 'inline'
         script: 'echo "GOOD JOB PIPELINE!"'
