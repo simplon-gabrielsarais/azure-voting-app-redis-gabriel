@@ -212,16 +212,24 @@ stages:
         containerRegistryType: 'Azure Container Registry'
 
     - task: Bash@3
-      name: checksiteprod
-      condition: succeeded()
+      name: checksitereset
+      displayName: Test de la requête pour reset
       inputs:
         targetType: 'inline'
         script: |
           exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
           echo "##vso[task.setvariable variable=exit5]$exitcode"
     - task: Bash@3
-      name: yourverygood
+      name: checksiteprod
       condition: eq(variables['exit5'],'200')
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -s -o -I -w "%{http_code}" http://votingappkube.simplon-thomas.space)
+          echo "##vso[task.setvariable variable=exit6]$exitcode"
+    - task: Bash@3
+      name: yourverygood
+      condition: eq(variables['exit6'],'200')
       inputs:
         targetType: 'inline'
         script: 'echo "GOOD JOB PIPELINE!"'
