@@ -50,17 +50,14 @@ stages:
   jobs:
   - job: 'Docker_image'
     variables:
-      verrep: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep'] ]
-      vernew: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'] ]
+      verrepi: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep'] ]
+      vernewi: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'] ]
     displayName: 'Docker Image Build' 
     pool:
       vmImage: ubuntu-latest 
     steps:
-    - task: CmdLine@2
-      inputs:
-        script: 'echo "$(verrep) $(vernew)"'
     - task: Docker@2
-      condition: ne(variables.verrep,variables.vernew)
+      condition: ne(variables.verrepi,variables.vernewi)
       inputs:
         containerRegistry: 'voteapp_Brief8_GS'
         repository: 'grabibel/voteapp_brief8_gs'
