@@ -44,8 +44,8 @@ stages:
 
 - stage: 'Build_docker_image'
   variables:
-    verrepi: $[ dependencies.Get_Versions.outputs['Get_Versionsi.scriptver.verrep'] ]
-    vernewi: $[ dependencies.Get_Versions.outputs['Get_Versionsi.scriptver.vernew'] ]
+    verrepi: $[ stageDependencies.Get_Versions.Get_Versionsi.outputs['Get_Versionsi.scriptver.verrep'] ]
+    vernewi: $[ stageDependencies.Get_Versions.Get_Versionsi.outputs['Get_Versionsi.scriptver.vernew'] ]
   dependsOn:
   - Get_Versions
   displayName: 'Build_docker_image' 
