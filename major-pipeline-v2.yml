@@ -27,10 +27,15 @@ stages:
         command: 'buildAndPush'
         Dockerfile: 'Dockerfile'
         tags: 'latest'
+      
+    - bash: exit 1
+      displayName: Fail build if partially successful
+      condition: eq(variables['Agent.JobStatus'], 'SucceededWithIssues')
+
 
 
 - stage: 'QAL_Deployment'
-  dependsOn: Get_Version
+  dependsOn: Build_docker_image
   condition: succeeded()
   displayName: 'Deploy on QAL' 
   jobs:
