@@ -40,7 +40,7 @@ stages:
           echo $versionrep $versionold $versionnew
         #  sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
         #  sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
-      name: "scriptver"
+        name: "scriptver"
 
 
 - stage: 'Build_docker_image'
@@ -186,7 +186,6 @@ stages:
 
     - task: KubernetesManifest@0
       name: "delete_canary"
-      condition: gt(stageDependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
