@@ -35,8 +35,6 @@ stages:
           echo "##vso[task.setvariable variable=vernew;isOutput=true]$versionnew"
           echo "##vso[task.setvariable variable=verrep;isOutput=true]$versionrep"
           echo "##vso[task.setvariable variable=verold;isOutput=true]$versionold"
-          sed -i 's/{{ version }}/'$versionnew'/g' kube_brief6/voteapp.yml
-          sed -i 's/{{ version }}/'$versionnew'/g' qal/voteapp_qal.yml
           echo $versionrep $versionold $versionnew
         #  sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
         #  sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
@@ -82,6 +80,12 @@ stages:
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
+    - task: CmdLine@2
+      name: modif_manif
+      inputs:
+        script: |
+          sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
+          sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
     - task: KubernetesManifest@0
       name: "kube_qal"
       condition: ne(variables.verold,variables.vernew)
@@ -135,11 +139,20 @@ stages:
   condition: gt(dependencies.Test_Charge.outputs['Test.GetPodsCount.appcnt'],2)
   displayName: 'Canary_deploy' 
   jobs:
-  - job: 'canary' 
+  - job: 'canary'
+    variables:
+      verold: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
+      vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
     displayName: 'Canary_deploy' 
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
+    - task: CmdLine@2
+      name: modif_manif
+      inputs:
+        script: |
+          sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
+          sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
     - task: KubernetesManifest@0
       condition: gt(stageDependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
       inputs:
@@ -178,12 +191,20 @@ stages:
   - ManualIntervention
   displayName: 'Deploy on Prod and delete qal and Canary' 
   jobs:
-  - job: 'Deployonprod' 
+  - job: 'Deployonprod'
+    variables:
+      verold: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
+      vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
     displayName: 'Deploy on Prod and delete qal and Canary' 
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
-
+    - task: CmdLine@2
+      name: modif_manif
+      inputs:
+        script: |
+          sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
+          sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
     - task: KubernetesManifest@0
       name: "delete_canary"
       inputs:
