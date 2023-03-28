@@ -37,7 +37,7 @@ stages:
           echo "##vso[task.setvariable variable=verold]$versionold"
           sed -i 's/{{ version }}/'$versionnew'/g' kube_brief6/voteapp.yml
           sed -i 's/{{ version }}/'$versionnew'/g' qal/voteapp_qal.yml
-          echo $versionrep $versionold $versionnew
+          echo "##vso[task.setvariable variable=vertest]$versionrep $versionold $versionnew"
         #  sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
         #  sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
       name: "scriptver"
@@ -50,8 +50,8 @@ stages:
   jobs:
   - job: 'Docker_image'
     variables:
-      verrep: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver'] ]
-      vernew: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver'] ]
+      verrep: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vertest'] ]
+      vernew: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vertest'] ]
     displayName: 'Docker Image Build' 
     pool:
       vmImage: ubuntu-latest 
