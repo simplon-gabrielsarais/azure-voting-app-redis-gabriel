@@ -143,6 +143,7 @@ stages:
       condition: succeeded()
       inputs:
         script: 'sleep 50'
+      name: "wait"
 
     - task: Kubernetes@1
       name: kubepods
@@ -168,6 +169,7 @@ stages:
 - stage: 'Canary_deploy'
   dependsOn:
   - Test_Charge
+  - Get_Versions
   condition: gt(dependencies.Test_Charge.outputs['Test.GetPodsCount.appcnt'],2)
   displayName: 'Canary_deploy' 
   jobs:
