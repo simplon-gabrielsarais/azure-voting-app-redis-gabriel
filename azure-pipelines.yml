@@ -140,6 +140,7 @@ stages:
         script: |
           seq 250 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=kebab' http://qal.distributeur-de-pain.best"
     - task: CmdLine@2
+      condition: succeeded()
       inputs:
         script: 'sleep 50'
 
