@@ -175,6 +175,7 @@ stages:
     variables:
       verold: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
       vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
+      appcnt: $[stageDependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt']]
     displayName: 'Canary_deploy' 
     pool:
       vmImage: 'ubuntu-latest' 
@@ -186,7 +187,7 @@ stages:
           sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
           sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
     - task: KubernetesManifest@0
-      condition: gt(stageDependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt'],2)
+      condition: gt(variables.appcnt,2)
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'connexion'
