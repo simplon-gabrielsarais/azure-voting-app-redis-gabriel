@@ -224,6 +224,7 @@ stages:
   - Test_Charge
   - Canary_deploy
   - ManualIntervention
+  - Get_Versions
   displayName: 'Deploy on Prod and delete qal and Canary' 
   jobs:
   - job: 'Deployonprod'
