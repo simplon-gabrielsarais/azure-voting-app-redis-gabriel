@@ -105,8 +105,36 @@ stages:
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
+    - task: Bash@3
+      name: checkpizza
+      displayName: Test de la requête pour voter free
+      condition: succeeded()
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -X POST -d "vote=pizza" http://qal.distributeur-de-pain.best -w "%{http_code}" -o /dev/null)
+          echo "##vso[task.setvariable variable=exit1]$exitcode"
+    - task: Bash@3
+      name: checkkebab
+      displayName: Test de la requête pour voter m6mobile
+      condition: eq(variables['exit1'],'200')
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -X POST -d "vote=kebab" http://qal.distributeur-de-pain.best -w "%{http_code}" -o /dev/null)
+          echo "##vso[task.setvariable variable=exit2]$exitcode"
+    - task: Bash@3
+      name: checksitereset
+      displayName: Test de la requête pour reset
+      condition: eq(variables['exit2'],'200')
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -X POST -d "vote=reset" http://qal.distributeur-de-pain.best -w "%{http_code}" -o /dev/null)
+          echo "##vso[task.setvariable variable=exit3]$exitcode"
     - task: CmdLine@2
       name: TestCharge
+      condition: eq(variables['exit3'],'200')
       inputs:
         script: |
           seq 250 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=kebab' http://qal.distributeur-de-pain.best"
@@ -116,6 +144,7 @@ stages:
 
     - task: Kubernetes@1
       name: kubepods
+      condition: succeeded()
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'connexion'
@@ -126,6 +155,7 @@ stages:
 
 
     - task: CmdLine@2
+      condition: succeeded()
       name: "GetPodsCount"
       inputs:
         script: |
