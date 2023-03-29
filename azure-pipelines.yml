@@ -35,7 +35,7 @@ stages:
           echo "##vso[task.setvariable variable=vernew;isOutput=true]$versionnew"
           echo "##vso[task.setvariable variable=verrep;isOutput=true]$versionrep"
           echo "##vso[task.setvariable variable=verold;isOutput=true]$versionold"
-          echo $versionrep $versionold $versionnew
+          echo verrep=$versionrep verold=$versionold vernew=$versionnew
         #  sed -i "s/  - port: [[:digit:]]\{2\}/  - port: 85/g" kube_brief6/voteapp.yml
         #  sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
       name: "scriptver"
