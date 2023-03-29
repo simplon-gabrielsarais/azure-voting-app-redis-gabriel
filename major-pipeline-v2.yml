@@ -31,8 +31,6 @@ stages:
         tags: 'latest'
       
 - stage: 'QAL_Deployment'
-  dependsOn: Build_docker_image
-  condition: eq(dependencies.Get_Version.result,'Succeeded with issues')
   displayName: 'Deploy on QAL' 
   jobs:
   - job: 'QAL_Deploy' 
