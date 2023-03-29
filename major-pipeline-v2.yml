@@ -3,16 +3,17 @@ trigger:
 
 stages:
 - stage: Build_docker_image
-  displayName: 'Build_docker_image' 
+  displayName: Build docker image 
   jobs:
 
   - job: Get_Version
-    displayName: 'Get Version Build' 
+    displayName: Get Version Build 
     pool:
       vmImage: ubuntu-latest 
     steps:
 
     - task: CmdLine@2
+      displayName: Comparaison version application
       inputs:
         script: |
           versionnew=$(cat azure-vote/main.py | grep -E "^ver = \"[0-9.]+\"\$"|awk -F\" {'print $2'})
@@ -22,6 +23,7 @@ stages:
   
     - task: Docker@2
       name: CreateDocImage
+      displayName: Création de l'image dockerhub
       condition: ne(variables.verold,variables.vernew)
       inputs:
         containerRegistry: 'dockerhub connection'
@@ -30,17 +32,17 @@ stages:
         Dockerfile: 'Dockerfile'
         tags: 'latest'
       
-- stage: 'QAL_Deployment'
-  displayName: 'Deploy on QAL' 
+- stage: QAL_Deployment
+  displayName: Qal
   jobs:
-  - job: 'QAL_Deploy' 
-    displayName: 'Deploy on QAL' 
+  - job: QAL_Deploy
+    displayName: Deploy on QAL 
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
     - task: KubernetesManifest@0
       name: kubeonqal
-      displayName: 'kubeonqal'
+      displayName: deploy cluster on qal namespace
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'clusterconnection'
@@ -48,6 +50,8 @@ stages:
         manifests: '**/kubernetes/qal/*'
     - task: Bash@3
       name: waitingfordeploy
+      condition: succeeded()
+      displayName: waiting for deployment
       inputs:
         targetType: 'inline'
         script: 'sleep 30'
@@ -108,6 +112,7 @@ stages:
       name: qalpods
 
     - task: CmdLine@2
+      condition: succeeded()
       name: countpod
       inputs:
         script: |
@@ -174,7 +179,7 @@ stages:
 
 
 - stage: 'DeployOnProd'
-  displayName: 'Deploy on Prod and delete Canary' 
+  displayName: 'Deploy on Prod' 
   jobs:
   - job: 'Deployonprod' 
     displayName: 'Deploy on Prod and delete Canary' 
@@ -184,6 +189,7 @@ stages:
 
     - task: Kubernetes@1
       name: deleteprodapp
+      displayName: replacement of production application
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'clusterconnection'
@@ -196,6 +202,7 @@ stages:
 
     - task: KubernetesManifest@0
       name: kubeonprod
+      displayName: deployment of production application
       condition: succeeded()
       inputs:
         action: 'deploy'
@@ -211,6 +218,7 @@ stages:
 
     - task: Kubernetes@1
       name: deletecanary
+      displayName: deletion of canary release
       condition: succeeded()
       inputs:
         connectionType: 'Kubernetes Service Connection'
