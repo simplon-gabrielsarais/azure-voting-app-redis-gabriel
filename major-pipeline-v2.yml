@@ -222,8 +222,14 @@ stages:
         containerRegistryType: 'Azure Container Registry'
 
     - task: Bash@3
-      name: checksitereset
-      displayName: Test de la requête pour reset
+      name: waitingfordeploy
+      inputs:
+        targetType: 'inline'
+        script: 'sleep 30'
+
+    - task: Bash@3
+      name: checksiteprod
+      displayName: Test de la requête pour prod
       inputs:
         targetType: 'inline'
         script: |
