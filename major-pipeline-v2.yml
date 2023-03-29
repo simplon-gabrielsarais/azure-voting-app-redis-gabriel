@@ -222,7 +222,8 @@ stages:
         containerRegistryType: 'Azure Container Registry'
 
     - task: Bash@3
-      name: waitingfordeploy
+      name: waitingfordeployprod
+      displayName: Waiting for deploy Production
       inputs:
         targetType: 'inline'
         script: 'sleep 30'
