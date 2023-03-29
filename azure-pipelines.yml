@@ -100,14 +100,15 @@ stages:
   condition: succeeded()
   displayName: 'Test_Charge' 
   jobs:
-  - job: 'Test' 
+  - job: 'Test'
+    timeoutInMinutes: 5
     displayName: 'Test_Charge' 
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
     - task: Bash@3
       name: checkpizza
-      displayName: Test de la requête pour voter free
+      displayName: Test de la requête pour voter pizza
       condition: succeeded()
       inputs:
         targetType: 'inline'
@@ -116,7 +117,7 @@ stages:
           echo "##vso[task.setvariable variable=exit1]$exitcode"
     - task: Bash@3
       name: checkkebab
-      displayName: Test de la requête pour voter m6mobile
+      displayName: Test de la requête pour voter kebab
       condition: eq(variables['exit1'],'200')
       inputs:
         targetType: 'inline'
