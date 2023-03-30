@@ -94,9 +94,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          cd test-reponse/
-          sh test-reponse-prod.sh
-              
+          cd $(System.DefaultWorkingDirectory)/test-reponse/
+          value=$('sh test-reponse-prod.sh')
+          echo $value
 
     - task: Bash@3
       name: responsetimeonqal
@@ -104,8 +104,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          cd test-reponse/
-          sh test-reponse-qal.sh
+          cd $(System.DefaultWorkingDirectory)/test-reponse/
+          value2=$('sh test-reponse-qal.sh')
+          echo $value2
 
     - task: CmdLine@2
       name : chargetest
