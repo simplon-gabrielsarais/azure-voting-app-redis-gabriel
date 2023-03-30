@@ -94,8 +94,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          responseprod=$(curl -w "@curl-format.txt" -o /dev/null -iF 'vote=free' -s "http://votingappkube.simplon-thomas.space")
-          echo"##vso[task.setvariable variable=repprod]$responseprod
+          responseprod=$(curl -w "@curl-format.txt" -o /dev/null -iF 'vote=free' 'http://votingappkube.simplon-thomas.space')
+          echo"##vso[task.setvariable variable=repprod]$responseprod"
 
     - task: Bash@3
       name: responsetimeonqal
@@ -103,8 +103,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          responseqal=$(curl -w "@curl-format.txt" -o /dev/null -iF 'vote=free' -s "http://qal.simplon-thomas.space")
-          echo"##vso[task.setvariable variable=repqal]$responseqal
+          responseqal=$(curl -w "@curl-format.txt" -o /dev/null -iF 'vote=free' 'http://qal.simplon-thomas.space')
+          echo"##vso[task.setvariable variable=repqal]$responseqal"
 
     - task: CmdLine@2
       name : chargetest
@@ -142,9 +142,16 @@ stages:
           echo $qalappcount
           echo "##vso[task.setvariable variable=countpods]$qalappcount"
 
+    - task: Bash@3
+      name: scalework
+      condition: ne(variables['countpods'],2)
+      inputs:
+        targetType: 'inline'
+        script: 'Scaling worked'
+
     - task: Kubernetes@1
       name: deleteqal
-      condition: ne(variables['countpods'],2)
+      condition: succeeded()
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'clusterconnection'
