@@ -106,10 +106,20 @@ stages:
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
+    - task: CmdLine@2
+      name: timetoresp
+      inputs:
+        script: |
+          trqal=$(curl -o /dev/null -s -w %{time_total}\\n  -iF 'vote=kebab' http://qal.distributeur-de-pain.best)curl -o /dev/null -s -w %{time_total}\\n  -iF 'vote=kebab' http://prod.distributeur-de-pain.best
+          trprod=$(curl -o /dev/null -s -w %{time_total}\\n  -iF 'vote=kebab' http://prod.distributeur-de-pain.best)curl -o /dev/null -s -w %{time_total}\\n  -iF 'vote=kebab' http://prod.distributeur-de-pain.best
+          echo "##vso[task.setvariable variable=trqal]$trqal"
+          echo "##vso[task.setvariable variable=trprod]$trprod"
+          echo 'qal=$trqal prod=$trprod'
+
     - task: Bash@3
       name: checkpizza
       displayName: Test de la requête pour voter pizza
-      condition: succeeded()
+      condition: gt($(trqal),$(trprod))
       inputs:
         targetType: 'inline'
         script: |
