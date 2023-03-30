@@ -219,15 +219,12 @@ stages:
         instructions: 'Please validate the build configuration and resume'
         onTimeout: 'resume'
 
-- stage: 'DeployOnProd'
+- stage: 'supqalcanar'
   dependsOn:
-  - Test_Charge
-  - Canary_deploy
   - ManualIntervention
-  - Get_Versions
-  displayName: 'Deploy on Prod and delete qal and Canary' 
+  displayName: 'delete qal and Canary' 
   jobs:
-  - job: 'Deployonprod'
+  - job: 'delete'
     variables:
       verold: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
       vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
@@ -251,7 +248,6 @@ stages:
         percentage: '0'
         manifests: '**/kube_brief6/*'
         rolloutStatusTimeout: '60'
-
     - task: KubernetesManifest@0
       name: "kube_qal_del"
       inputs:
@@ -260,6 +256,29 @@ stages:
         namespace: 'qal'
         arguments: '-f $(System.DefaultWorkingDirectory)/qal/'
 
+- stage: 'DeployOnProd'
+  dependsOn:
+  - Test_Charge
+  - Canary_deploy
+  - ManualIntervention
+  - Get_Versions
+  condition: succeeded() 
+  displayName: 'Deploy on Prod and delete qal and Canary' 
+  jobs:
+  - job: 'Deployonprod'
+    variables:
+      verold: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
+      vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
+    displayName: 'Deploy on Prod and delete qal and Canary' 
+    pool:
+      vmImage: 'ubuntu-latest' 
+    steps:
+    - task: CmdLine@2
+      name: modif_manif
+      inputs:
+        script: |
+          sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
+          sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
     - task: KubernetesManifest@0
       name: "kube_prod"
       inputs:
