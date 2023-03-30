@@ -145,12 +145,11 @@ stages:
           echo $qalappcount
           echo "##vso[task.setvariable variable=countpods]$qalappcount"
 
-    - task: Bash@3
-      name: scalework
+    - task: CmdLine@2
       condition: ne(variables['countpods'],2)
+      name: scalework
       inputs:
-        targetType: 'inline'
-        script: 'Scaling worked'
+        script: echo 'Scaling worked'
 
     - task: Kubernetes@1
       name: deleteqal
