@@ -94,6 +94,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          sudo apt-get -y install bash
           cd $(System.DefaultWorkingDirectory)/test-reponse/
           chmod +x test-reponse-prod.sh
           value=$('test-reponse-prod.sh')
@@ -104,7 +105,7 @@ stages:
       displayName: test du temps de réponse de la requête de vote sur qal
       inputs:
         targetType: 'inline'
-        script: |
+        script: |    
           cd $(System.DefaultWorkingDirectory)/test-reponse/
           chmod +x test-reponse-qal.sh
           value2=$('test-reponse-qal.sh')
