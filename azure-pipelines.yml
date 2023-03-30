@@ -114,7 +114,7 @@ stages:
           trprod=$(curl -o /dev/null -s -w %{time_total}\\n  -iF 'vote=kebab' http://prod.distributeur-de-pain.best)curl -o /dev/null -s -w %{time_total}\\n  -iF 'vote=kebab' http://prod.distributeur-de-pain.best
           echo "##vso[task.setvariable variable=trqal]$trqal"
           echo "##vso[task.setvariable variable=trprod]$trprod"
-          echo 'qal=$trqal prod=$trprod'
+          echo qal=$trqal prod=$trprod
 
     - task: Bash@3
       name: checkpizza
