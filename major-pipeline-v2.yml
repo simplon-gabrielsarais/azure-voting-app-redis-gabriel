@@ -94,10 +94,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          ls
           cd test-reponse/
-          ls
-          cat test-reponse-prod.sh
           sh test-reponse-prod.sh
               
 
@@ -106,7 +103,9 @@ stages:
       displayName: test du temps de réponse de la requête de vote sur qal
       inputs:
         targetType: 'inline'
-        script: 'sh $(System.DefaultWorkingDirectory)/test-reponse/test-reponse-qal.sh'
+        script: |
+          cd test-reponse/
+          sh test-reponse-qal.sh
 
     - task: CmdLine@2
       name : chargetest
