@@ -119,7 +119,7 @@ stages:
     - task: Bash@3
       name: checkpizza
       displayName: Test de la requête pour voter pizza
-      condition: gt(variables['trqal'],variables['trprod'])
+      condition: lt(variables['trqal'],variables['trprod'])
       inputs:
         targetType: 'inline'
         script: |
