@@ -110,11 +110,12 @@ stages:
       name: timetoresp
       inputs:
         script: |
+          inc=0.5
           trqal=$(curl -o /dev/null -s -w %{time_total}\\n  -iF 'vote=kebab' http://qal.distributeur-de-pain.best)
           trprod=$(curl -o /dev/null -s -w %{time_total}\\n  -iF 'vote=kebab' http://prod.distributeur-de-pain.best)
-          trprod=$($trprod+0.5)
+          result=$(echo "$trprod + $inc"|bc)
           echo "##vso[task.setvariable variable=trqal]$trqal"
-          echo "##vso[task.setvariable variable=trprod]$trprod"
+          echo "##vso[task.setvariable variable=trprod]$result"
           echo qal=$trqal prod=$trprod
 
     - task: Bash@3
