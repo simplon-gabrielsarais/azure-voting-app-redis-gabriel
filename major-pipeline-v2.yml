@@ -94,7 +94,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          responseprod=$(curl -w "@fichier-test/curl-format.txt" -o /dev/null -iF ''vote=free'' -s "http://votingappkube.simplon-thomas.space')
+          responseprod=$(curl -w "@fichier-test/curl-format.txt" -o /dev/null -iF 'vote=free' -s "http://votingappkube.simplon-thomas.space")
           echo"##vso[task.setvariable variable=repprod]$responseprod
 
     - task: Bash@3
@@ -103,7 +103,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          responseqal=$(curl -w "@fichier-test/curl-format.txt" -o /dev/null -iF ''vote=free'' -s "http://qal.simplon-thomas.space')
+          responseqal=$(curl -w "@fichier-test/curl-format.txt" -o /dev/null -iF 'vote=free' -s "http://qal.simplon-thomas.space")
           echo"##vso[task.setvariable variable=repqal]$responseqal
 
     - task: CmdLine@2
@@ -173,7 +173,6 @@ stages:
       steps:
       - task: Kubernetes@1
         name: deleteqal
-        condition: ne(variables['countpods'],2)
         inputs:
           connectionType: 'Kubernetes Service Connection'
           kubernetesServiceEndpoint: 'clusterconnection'
