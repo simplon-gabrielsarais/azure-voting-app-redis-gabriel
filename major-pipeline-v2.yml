@@ -92,22 +92,14 @@ stages:
       displayName: test du temps de réponse de la requête de vote sur prod
       inputs:
         script: |
-          sudo apt-get -y install bash
-          cd $(System.DefaultWorkingDirectory)/test-reponse/
-          chmod +x test-reponse-prod.sh
-          value=$('bash test-reponse-prod.sh')
-          echo $value
+          curl -o /dev/null -s -w %{time_total}\n  -iF 'vote=free' http://votingappkube.simplon-thomas.space/
 
-    - task: Bash@3
-      name: responsetimeonqal
+    - task: CmdLine@2
+      condition: eq(variables['exit3'],'200')
       displayName: test du temps de réponse de la requête de vote sur qal
       inputs:
-        targetType: 'inline'
-        script: |    
-          cd $(System.DefaultWorkingDirectory)/test-reponse/
-          chmod +x test-reponse-qal.sh
-          value2=$('test-reponse-qal.sh')
-          echo $value2
+        script: |
+          curl -o /dev/null -s -w %{time_total}\n  -iF 'vote=free' http://qal.simplon-thomas.space/
 
     - task: CmdLine@2
       name : chargetest
