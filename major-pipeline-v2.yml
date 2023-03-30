@@ -95,7 +95,8 @@ stages:
         targetType: 'inline'
         script: |
           ls
-          cat test-reponse/test-reponse.sh
+          cd test-reponse/
+          ls
               
 
     - task: Bash@3
