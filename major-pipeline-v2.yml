@@ -161,6 +161,30 @@ stages:
         script: 'echo "QAL DELETION"'
 
 
+- stage: 'Delete_Qal'
+  condition: failed()
+  dependsOn: QAL_Deployment
+  displayName: Suppression de la QAL si failed
+  jobs:
+    - job: Delete_QAL
+      displayName: Suppression de la QAL
+      pool: 
+        vmImage: 'ubuntu-latest'
+      steps:
+      - task: Kubernetes@1
+        name: deleteqal
+        condition: ne(variables['countpods'],2)
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceEndpoint: 'clusterconnection'
+          namespace: 'qal'
+          command: 'delete'
+          arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal/'
+          secretType: 'dockerRegistry'
+          containerRegistryType: 'Azure Container Registry'
+
+
+
 - stage: 'Deploy_canary'
   condition: succeeded() 
   displayName: 'Deploy Canary Release' 
