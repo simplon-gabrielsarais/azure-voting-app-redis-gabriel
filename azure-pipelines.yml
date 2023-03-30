@@ -197,8 +197,8 @@ stages:
         strategy: 'canary'
         percentage: '50'
         manifests: '**/kube_brief6/*'
-        rolloutStatusTimeout: '60'
-      name: "kube_prod"
+        rolloutStatusTimeout: '300'
+      name: "kube_canar"
 
 - stage: 'ManualIntervention'
   dependsOn:
