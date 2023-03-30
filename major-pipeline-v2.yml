@@ -94,7 +94,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          responseprod=$(curl -w "@curl-format.txt" -o /dev/null -iF 'vote=free' 'http://votingappkube.simplon-thomas.space')
+          responseprod=$(bash /test-reponse/test-reponse-prod.sh)
           echo"##vso[task.setvariable variable=repprod]$responseprod"
 
     - task: Bash@3
@@ -103,7 +103,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          responseqal=$(curl -w "@curl-format.txt" -o /dev/null -iF 'vote=free' 'http://qal.simplon-thomas.space')
+          responseqal=$(bash /test-reponse/test-reponse-qal.sh)
           echo"##vso[task.setvariable variable=repqal]$responseqal"
 
     - task: CmdLine@2
