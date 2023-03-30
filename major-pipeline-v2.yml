@@ -112,7 +112,7 @@ stages:
     - task: CmdLine@2
       name : chargetest
       displayName: Test de charge de la qal
-      condition: lt(variables['repprod'],variables['repqal'])
+      condition: gt(variables['repprod'],variables['repqal'])
       inputs:
         script: |
           seq 250 | parallel --max-args 0  --jobs 20 "curl -k -iF 'vote=free' http://qalvotingapp.simplon-thomas.space"
