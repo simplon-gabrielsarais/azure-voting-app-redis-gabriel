@@ -186,7 +186,8 @@ stages:
 
 
 - stage: 'Deploy_canary'
-  condition: succeeded() 
+  condition: succeeded()
+  dependsOn: QAL_Deployment
   displayName: 'Deploy Canary Release' 
   jobs:
   - job: 'Deploy_canary' 
