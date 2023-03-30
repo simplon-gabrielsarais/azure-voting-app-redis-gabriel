@@ -28,7 +28,7 @@ spec:
         - name: REDIS
           value: "clustredis"
         - name: STRESS_SECS
-          value: "5"
+          value: "3"
         - name: REDIS_PWD
           valueFrom:
             secretKeyRef:
