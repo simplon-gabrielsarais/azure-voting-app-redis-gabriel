@@ -98,6 +98,7 @@ stages:
           cd test-reponse/
           ls
           cat test-reponse-prod.sh
+          sh test-reponse-prod.sh
               
 
     - task: Bash@3
