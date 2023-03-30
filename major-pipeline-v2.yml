@@ -93,19 +93,14 @@ stages:
       displayName: test du temps de réponse de la requête de vote sur prod
       inputs:
         targetType: 'inline'
-        script: |
-          cd ~
-          responseprod=$(sh test-reponse/test-reponse-prod.sh)
-          echo"##vso[task.setvariable variable=repprod]$responseprod"
+        script: 'sh test-reponse/test-reponse-prod.sh'
 
     - task: Bash@3
       name: responsetimeonqal
       displayName: test du temps de réponse de la requête de vote sur qal
       inputs:
         targetType: 'inline'
-        script: |
-          responseqal=$(sh test-reponse/test-reponse-qal.sh)
-          echo"##vso[task.setvariable variable=repqal]$responseqal"
+        script: 'sh test-reponse/test-reponse-qal.sh'
 
     - task: CmdLine@2
       name : chargetest
