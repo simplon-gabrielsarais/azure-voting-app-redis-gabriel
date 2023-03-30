@@ -93,7 +93,8 @@ stages:
       displayName: test du temps de réponse de la requête de vote sur prod
       inputs:
         targetType: 'inline'
-        script: 'sh test-reponse/test-reponse-prod.sh'
+        script: var=$('sh test-reponse/test-reponse-prod.sh')
+                echo $var
 
     - task: Bash@3
       name: responsetimeonqal
