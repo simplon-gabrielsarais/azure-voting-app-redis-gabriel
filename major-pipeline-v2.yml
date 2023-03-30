@@ -94,7 +94,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          responseprod=$(bash /test-reponse/test-reponse-prod.sh)
+          responseprod=$(bash ./test-reponse/test-reponse-prod.sh)
           echo"##vso[task.setvariable variable=repprod]$responseprod"
 
     - task: Bash@3
@@ -103,7 +103,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          responseqal=$(bash /test-reponse/test-reponse-qal.sh)
+          responseqal=$(bash ./test-reponse/test-reponse-qal.sh)
           echo"##vso[task.setvariable variable=repqal]$responseqal"
 
     - task: CmdLine@2
