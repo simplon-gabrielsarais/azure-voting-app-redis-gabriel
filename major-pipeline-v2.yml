@@ -97,7 +97,7 @@ stages:
           sudo apt-get -y install bash
           cd $(System.DefaultWorkingDirectory)/test-reponse/
           chmod +x test-reponse-prod.sh
-          value=$('test-reponse-prod.sh')
+          value=$('bash test-reponse-prod.sh')
           echo $value
 
     - task: Bash@3
