@@ -95,6 +95,7 @@ stages:
         targetType: 'inline'
         script: |
           cd $(System.DefaultWorkingDirectory)/test-reponse/
+          chmod +x test-reponse-prod.sh
           value=$('test-reponse-prod.sh')
           echo $value
 
@@ -105,6 +106,7 @@ stages:
         targetType: 'inline'
         script: |
           cd $(System.DefaultWorkingDirectory)/test-reponse/
+          chmod +x test-reponse-qal.sh
           value2=$('test-reponse-qal.sh')
           echo $value2
 
