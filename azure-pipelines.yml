@@ -21,7 +21,7 @@ stages:
         kubernetesServiceEndpoint: 'connexion'
         namespace: 'prod'
         command: 'get'
-        arguments: 'pods --field-selector metadata.name=voteapp'
+        arguments: 'description --field-selector spec.template'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
       name: "kubeinfo"
