@@ -98,14 +98,24 @@ stages:
 
 - stage: 'Test_Charge'
   condition: succeeded()
-  displayName: 'Test_Charge' 
+  displayName: 'Test_Charge'
   jobs:
   - job: 'Test'
     timeoutInMinutes: 5
+    variables:
+      verold: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
+      vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
+      appcnt: $[stageDependencies.Test_Charge.Test.outputs['GetPodsCount.appcnt']]
     displayName: 'Test_Charge' 
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
+    - task: CmdLine@2
+      name: modif_manif
+      inputs:
+        script: |
+          sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
+          sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
     - task: Bash@3
       name: checkpizza
       displayName: Test de la requête pour voter pizza
@@ -155,7 +165,6 @@ stages:
       inputs:
         script: 'sleep 50'
       name: "wait"
-
     - task: Kubernetes@1
       name: kubepods
       condition: succeeded()
@@ -166,8 +175,6 @@ stages:
         command: 'get'
         useConfigurationFile: true
         configuration: './qal/voteapp_qal.yml'
-
-
     - task: CmdLine@2
       condition: succeeded()
       name: "GetPodsCount"
@@ -176,6 +183,13 @@ stages:
           voteappcount=$(echo $KUBEPODS_KUBECTLOUTPUT | jq '.items[0].spec.replicas')
           echo $voteappcount
           echo "##vso[task.setvariable variable=appcnt;isOutput=true]$voteappcount"
+    - task: KubernetesManifest@0
+      name: "kube_qal_del"
+      inputs:
+        action: 'delete'
+        kubernetesServiceConnection: 'connexion'
+        namespace: 'qal'
+        arguments: '-f $(System.DefaultWorkingDirectory)/qal/'
 
 - stage: 'Canary_deploy'
   dependsOn:
@@ -230,12 +244,13 @@ stages:
         instructions: 'Please validate the build configuration and resume'
         onTimeout: 'resume'
 
-- stage: 'supqalcanar'
+- stage: 'supcanar'
   condition: failed()
   dependsOn:
   - Get_Versions
   - ManualIntervention
-  displayName: 'delete qal and Canary' 
+  - Test_Charge
+  displayName: 'delete Canary' 
   jobs:
   - job: 'delete'
     variables:
@@ -261,13 +276,6 @@ stages:
         percentage: '0'
         manifests: '**/kube_brief6/*'
         rolloutStatusTimeout: '60'
-    - task: KubernetesManifest@0
-      name: "kube_qal_del"
-      inputs:
-        action: 'delete'
-        kubernetesServiceConnection: 'connexion'
-        namespace: 'qal'
-        arguments: '-f $(System.DefaultWorkingDirectory)/qal/'
 
 - stage: 'DeployOnProd'
   dependsOn:
