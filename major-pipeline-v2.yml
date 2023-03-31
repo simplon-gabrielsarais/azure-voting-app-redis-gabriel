@@ -54,7 +54,7 @@ stages:
       displayName: waiting for deployment
       inputs:
         targetType: 'inline'
-        script: 'sleep 30'
+        script: 'sleep 45'
       
     - task: Bash@3
       name: checksitefreevote
@@ -123,7 +123,7 @@ stages:
       condition: gt(variables['repprod'],variables['repqal'])
       name: waitforcharge
       inputs:
-        script: 'sleep 90'
+        script: 'sleep 70'
 
     - task: Kubernetes@1
       condition: gt(variables['repprod'],variables['repqal'])
@@ -289,7 +289,7 @@ stages:
       displayName: Waiting for deploy Production
       inputs:
         targetType: 'inline'
-        script: 'sleep 30'
+        script: 'sleep 20'
 
     - task: Bash@3
       name: checksiteprod
