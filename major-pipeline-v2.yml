@@ -145,7 +145,7 @@ stages:
         script: |
           qalappcount=$(echo $QALPODS_KUBECTLOUTPUT | jq '.items[0].spec.replicas')
           echo $qalappcount
-          echo "##vso[task.setvariable variable=countpods]$qalappcount"
+          echo "##vso[task.setvariable variable=countpods; isOutput=true]$qalappcount"
 
     - task: CmdLine@2
       condition: ne(variables['countpods'],2)
