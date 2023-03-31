@@ -173,7 +173,7 @@ stages:
 
 
 - stage: 'Delete_Qal'
-  condition: failedOrSkipped()
+  condition: failed()
   dependsOn: QAL_Deployment
   displayName: Suppression de la QAL si failed
   jobs:
