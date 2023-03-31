@@ -173,7 +173,13 @@ stages:
 
 
 - stage: 'Delete_Qal'
-  condition: failed()
+  condition:  |
+    and(
+      succeeded(),
+      in(variables['System.StageDisplayName'], 'QAL_Deployment'),
+      eq(variables['System.JobDisplayName'], 'QAL_Deploy'),
+      eq(variables['System.TaskDisplayName'], 'chargetest')
+    )
   dependsOn: QAL_Deployment
   displayName: Suppression de la QAL si failed
   jobs:
