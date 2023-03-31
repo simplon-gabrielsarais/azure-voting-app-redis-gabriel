@@ -224,9 +224,9 @@ stages:
         kubernetesServiceConnection: 'connexion'
         namespace: 'prod'
         strategy: 'canary'
-        percentage: '50'
-        manifests: '**/kube_brief6/*'
-        rolloutStatusTimeout: '300'
+        percentage: '30'
+        manifests: '**/kube_brief6/voteapp.yml'
+        rolloutStatusTimeout: '120'
       name: "kube_canar"
 
 - stage: 'ManualIntervention'
