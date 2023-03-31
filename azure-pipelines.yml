@@ -152,7 +152,7 @@ stages:
           echo "##vso[task.setvariable variable=trprod]$result"
           echo qal=$trqal prod=$trprod
     - task: CmdLine@2
-      condition: gt(variables['trqal'],variables['trprod'])
+      condition: gt(variables['trprod'],variables['trqal'])
       name: TestCharge
       inputs:
         script: |
