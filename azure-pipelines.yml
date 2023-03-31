@@ -21,7 +21,7 @@ stages:
         kubernetesServiceEndpoint: 'connexion'
         namespace: 'prod'
         command: 'get'
-        arguments: 'deployments'
+        arguments: 'deployments --no-headers'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
       name: "kubeinfo"
