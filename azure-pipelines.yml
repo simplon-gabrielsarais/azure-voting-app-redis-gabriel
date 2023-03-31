@@ -315,13 +315,6 @@ stages:
         manifests: '**/kube_brief6/*'
         rolloutStatusTimeout: '60'
     - task: KubernetesManifest@0
-      name: "kube_qal_del"
-      inputs:
-        action: 'delete'
-        kubernetesServiceConnection: 'connexion'
-        namespace: 'qal'
-        arguments: '-f $(System.DefaultWorkingDirectory)/qal/'
-    - task: KubernetesManifest@0
       name: "kube_prod"
       inputs:
         action: 'deploy'
