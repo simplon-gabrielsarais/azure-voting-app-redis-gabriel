@@ -175,6 +175,7 @@ stages:
         script: |
           sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
           sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
+          echo $(vernew)
     - task: CmdLine@2
       condition: succeeded()
       name: "GetPodsCount"
