@@ -194,10 +194,10 @@ stages:
           containerRegistryType: 'Azure Container Registry'
 
 
-
 - stage: 'Deploy_canary'
-  condition: succeeded()
-  dependsOn: QAL_Deployment
+  dependsOn:
+  - QAL_Deployment
+  condition: gt(dependencies.QAL_Deployment.outputs['QAL_Deploy.countpod.countpods'],2)
   displayName: 'Deploy Canary Release' 
   jobs:
   - job: 'Deploy_canary' 
