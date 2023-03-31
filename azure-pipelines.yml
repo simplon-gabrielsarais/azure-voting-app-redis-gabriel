@@ -98,6 +98,9 @@ stages:
 
 - stage: 'Test_Charge'
   condition: succeeded()
+  dependsOn:
+  - Get_Versions
+  - QAL_Deployment
   displayName: 'Test_Charge'
   jobs:
   - job: 'Test'
