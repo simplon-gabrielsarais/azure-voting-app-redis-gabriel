@@ -196,13 +196,7 @@ stages:
 
 
 - stage: 'Deploy_canary'
-  condition:  |
-    and(
-      succeeded(),
-      in(variables['System.StageDisplayName'], 'QAL_Deployment'),
-      eq(variables['System.JobDisplayName'], 'QAL_Deploy'),
-      eq(variables['System.TaskDisplayName'], 'chargetest')
-    )
+  condition: succeeded()
   dependsOn: QAL_Deployment
   displayName: 'Deploy Canary Release' 
   jobs:
