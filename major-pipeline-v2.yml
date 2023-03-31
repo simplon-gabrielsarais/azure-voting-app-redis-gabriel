@@ -173,7 +173,7 @@ stages:
 
 
 - stage: 'Delete_Qal'
-  condition: succeededwithissues(),failed()
+  condition: eq(stagedependencies.QAL_Deployment.Get_Version.result,'SucceededWithIssues')
   dependsOn: QAL_Deployment
   displayName: Suppression de la QAL si failed
   jobs:
