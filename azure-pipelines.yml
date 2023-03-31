@@ -260,7 +260,7 @@ stages:
     variables:
       verold: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verold']]
       vernew: $[stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew']]
-    displayName: 'Deploy on Prod and delete qal and Canary' 
+    displayName: 'Deploy on Prod and delete Canary' 
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
