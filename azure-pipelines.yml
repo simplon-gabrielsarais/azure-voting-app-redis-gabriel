@@ -110,12 +110,6 @@ stages:
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
-    - task: CmdLine@2
-      name: modif_manif
-      inputs:
-        script: |
-          sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
-          sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
     - task: Bash@3
       name: checkpizza
       displayName: Test de la requête pour voter pizza
@@ -175,6 +169,12 @@ stages:
         command: 'get'
         useConfigurationFile: true
         configuration: './qal/voteapp_qal.yml'
+    - task: CmdLine@2
+      name: modif_manif
+      inputs:
+        script: |
+          sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
+          sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
     - task: CmdLine@2
       condition: succeeded()
       name: "GetPodsCount"
