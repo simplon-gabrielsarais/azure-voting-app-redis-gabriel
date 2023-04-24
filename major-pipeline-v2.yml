@@ -3,7 +3,7 @@ trigger:
 
 
 stages:
-- stage : Run_SonarQube_Analysis
+- stage : Run_SonarCloud_Analysis
   jobs:
     - job: Analysis
       displayName: Analysis
@@ -24,6 +24,7 @@ stages:
       - task: SonarCloudAnalyze@1
 
 - stage: Build_docker_image
+  condition: success
   displayName: Build docker image 
   jobs:
   - job: Get_Version
