@@ -6,7 +6,6 @@ trigger:
 
 stages:
 - stage : Run_SonarQube_Analysis
-  displayname: Run Code Analysis SonarQube
   jobs:
     - job: Analysis
       displayName: Analysis
