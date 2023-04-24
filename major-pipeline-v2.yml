@@ -12,7 +12,8 @@ stages:
       pool:
         vmImage: ubuntu-latest
       steps:
-      - task: SonarQubeAnalyze@5
+      - checkout: self
+        fetchDepth: 0
 
 - stage: Build_docker_image
   displayName: Build docker image 
