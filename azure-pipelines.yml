@@ -14,6 +14,17 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+    - checkout: self
+      fetchDepth: 0
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'sanarqube'
+        organization: 'gsaraisext-devops'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: 'gsaraisext_Brief-8'
+        cliProjectName: 'Brief-8'
+        cliSources: './azure-vote'
     
 - stage: 'Get_Versions' 
   displayName: 'Get_Versions' 
