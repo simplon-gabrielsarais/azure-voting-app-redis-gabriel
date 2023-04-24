@@ -24,7 +24,7 @@ stages:
       - task: SonarCloudAnalyze@1
 
 - stage: Build_docker_image
-  condition: success
+  condition: succeeded()
   displayName: Build docker image 
   jobs:
   - job: Get_Version
