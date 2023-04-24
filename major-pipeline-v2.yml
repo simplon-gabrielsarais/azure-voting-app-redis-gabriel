@@ -2,8 +2,6 @@ trigger:
 - master
 
 
-
-
 stages:
 - stage : Run_SonarQube_Analysis
   jobs:
@@ -14,6 +12,16 @@ stages:
       steps:
       - checkout: self
         fetchDepth: 0
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'SonarCloud'
+          organization: 'tjulianext'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'tjulianext_Brief_8_TJ'
+          cliProjectName: 'Brief_8_TJ'
+          cliSources: '.'
+      - task: SonarCloudAnalyze@1
 
 - stage: Build_docker_image
   displayName: Build docker image 
