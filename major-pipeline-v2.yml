@@ -26,13 +26,11 @@ stages:
 - stage: Build_docker_image
   displayName: Build docker image 
   jobs:
-
   - job: Get_Version
     displayName: Get Version Build 
     pool:
       vmImage: ubuntu-latest 
     steps:
-
     - task: CmdLine@2
       displayName: Comparaison version application
       inputs:
