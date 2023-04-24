@@ -5,8 +5,16 @@
 
 trigger:
 - master
-
 stages:
+- stage: 'verif_code'
+  displayName: 'verif_code'
+  jobs:
+  - job: verif_version
+    displayName: 'verifcode' 
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    
 - stage: 'Get_Versions' 
   displayName: 'Get_Versions' 
   jobs:
