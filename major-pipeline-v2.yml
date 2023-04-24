@@ -8,7 +8,7 @@ stages:
     - job: Analysis
       displayName: Analysis
       pool:
-        vmImage: ubuntu-latest
+        vmImage: windows-2022
       steps:
       - checkout: self
         fetchDepth: 0
