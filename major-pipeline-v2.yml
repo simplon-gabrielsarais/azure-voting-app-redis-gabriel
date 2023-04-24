@@ -1,14 +1,14 @@
 trigger:
 - master
 
+pool:
+    vmImage: ubuntu-latest 
 
 stages:
 - stage : Run_SonarCloud_Analysis
   jobs:
     - job: Analysis
       displayName: Analysis
-      pool:
-        vmImage: windows-2022
       steps:
       - checkout: self
         fetchDepth: 0
@@ -29,8 +29,6 @@ stages:
   jobs:
   - job: Get_Version
     displayName: Get Version Build 
-    pool:
-      vmImage: ubuntu-latest 
     steps:
     - task: CmdLine@2
       displayName: Comparaison version application
