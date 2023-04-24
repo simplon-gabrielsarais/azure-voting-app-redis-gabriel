@@ -1,7 +1,20 @@
 trigger:
 - master
 
+
+
+
 stages:
+- stage : Run_SonarQube_Analysis
+  displayname: Run Code Analysis SonarQube
+  jobs:
+    - job: Analysis
+      displayName: Analysis
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+      - task: SonarQubeAnalyze@5
+
 - stage: Build_docker_image
   displayName: Build docker image 
   jobs:
