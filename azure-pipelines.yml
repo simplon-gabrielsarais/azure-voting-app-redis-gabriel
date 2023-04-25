@@ -162,22 +162,12 @@ stages:
         script: |
           exitcode=$(curl -X POST -d "vote=reset" http://qal.distributeur-de-pain.best -w "%{http_code}" -o /dev/null)
           echo "##vso[task.setvariable variable=exit3]$exitcode"
+
     - task: owaspzap@1
       inputs:
-        aggressivemode: true
         scantype: 'targetedScan'
         url: 'http://qal.distributeur-de-pain.best'
-    - task: CmdLine@2
-      inputs:
-        script: |
-          tree
-          cat ./owaspzap/report.json
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'NUnit'
-        testResultsFiles: './owaspzap/report.json'
-        testRunTitle: 'owasp'
-
+        
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
       name: timetoresp
