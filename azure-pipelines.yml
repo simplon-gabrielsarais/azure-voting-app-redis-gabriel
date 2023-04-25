@@ -169,7 +169,14 @@ stages:
         url: 'http://qal.distributeur-de-pain.best'
     - task: CmdLine@2
       inputs:
-        script: 'tree'
+        script: |
+          tree
+          cat ./owaspzap/report.json
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'NUnit'
+        testResultsFiles: './owaspzap/report.json'
+        testRunTitle: 'owasp'
 
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
