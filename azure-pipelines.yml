@@ -24,7 +24,7 @@ stages:
         configMode: 'manual'
         cliProjectKey: 'gsaraisext_Brief-8'
         cliProjectName: 'Brief-8'
-        cliSources: './azure-vote'
+        cliSources: '.'
     - task: SonarCloudAnalyze@1
     - task: SonarCloudPublish@1
       inputs:
