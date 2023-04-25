@@ -22,6 +22,10 @@ stages:
           cliProjectName: 'Brief_8_TJ'
           cliSources: '.'
       - task: SonarCloudAnalyze@1
+      - task: SonarCloudPublish@1
+        inputs:
+          pollingTimeoutSec: '300'
+
 
 - stage: Build_docker_image
   condition: succeeded()
