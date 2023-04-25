@@ -25,6 +25,7 @@ stages:
         cliProjectKey: 'gsaraisext_Brief-8'
         cliProjectName: 'Brief-8'
         cliSources: './azure-vote'
+    - task: SonarCloudAnalyze@1
     
 - stage: 'Get_Versions' 
   displayName: 'Get_Versions' 
