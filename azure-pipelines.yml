@@ -26,6 +26,9 @@ stages:
         cliProjectName: 'Brief-8'
         cliSources: './azure-vote'
     - task: SonarCloudAnalyze@1
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
     
 - stage: 'Get_Versions' 
   displayName: 'Get_Versions' 
