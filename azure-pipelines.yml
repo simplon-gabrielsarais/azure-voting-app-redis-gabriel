@@ -168,7 +168,7 @@ stages:
         scantype: 'targetedScan'
         url: 'http://qal.distributeur-de-pain.best'
 
-    - bash: |
+- bash: |
    sudo npm install -g handlebars-cmd
 
    cat <<EOF > owaspzap/nunit-template.hbs
@@ -222,7 +222,6 @@ stages:
    EOF
   displayName: 'owasp nunit template'
   condition: always()
-  
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
       name: timetoresp
