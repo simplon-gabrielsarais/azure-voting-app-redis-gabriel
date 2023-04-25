@@ -167,13 +167,10 @@ stages:
         aggressivemode: true
         scantype: 'targetedScan'
         url: 'http://qal.distributeur-de-pain.best'
-
-    - task: PublishTestResults@2
+    - task: CmdLine@2
       inputs:
-        testResultsFormat: 'NUnit'
-        testResultsFiles: '/home/vsts/work/1/s/owaspzap/result.json'
-        testRunTitle: 'owasp'
-        
+        script: 'tree'
+
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
       name: timetoresp
