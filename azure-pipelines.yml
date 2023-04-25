@@ -171,7 +171,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'NUnit'
-        testResultsFiles: '**/owaspzap/result.json'
+        testResultsFiles: '/home/vsts/work/1/s/owaspzap/result.json'
         testRunTitle: 'owasp'
         
     - task: CmdLine@2
