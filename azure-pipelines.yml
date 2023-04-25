@@ -166,7 +166,7 @@ stages:
       inputs:
         aggressivemode: true
         scantype: 'targetedScan'
-        url: 'qal.distributeur-de-pain.best'
+        url: 'http://qal.distributeur-de-pain.best'
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
       name: timetoresp
