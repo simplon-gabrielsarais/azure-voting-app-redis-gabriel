@@ -32,7 +32,7 @@ stages:
         Dockerfile: 'Dockerfile'
         tags: 'latest'
       
-- stage: Grype_test
+- stage: grype_test
   displayName: grype test
   condition: succeeded()
   jobs:
@@ -46,7 +46,7 @@ stages:
         script: |
           sudo curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
     - task: CmdLine@2
-      displayName: finalresult
+      name: finalresult
       inputs:
         script: |
           gryperesult=$(sudo grype dir:/home/vsts/work/1/)
@@ -57,7 +57,7 @@ stages:
 - stage: QAL_Deployment
   displayName: Qal
   dependsOn: Grype_test
-  condition: eq(dependencies.Grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities found')
+  condition: eq(dependencies.grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities found')
   jobs:
   - job: QAL_Deploy
     displayName: Deploy on QAL 
