@@ -33,7 +33,7 @@ stages:
         tags: 'latest'
       
 - stage: Grype_test
-  displayName: grype_test
+  displayName: grype test
   condition: succeeded()
   jobs:
   - job: grype_test
@@ -56,6 +56,7 @@ stages:
 
 - stage: QAL_Deployment
   displayName: Qal
+  dependsOn: Grype_test
   condition: eq(dependencies.Grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities found')
   jobs:
   - job: QAL_Deploy
