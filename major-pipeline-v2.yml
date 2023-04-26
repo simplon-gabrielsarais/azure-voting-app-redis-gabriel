@@ -46,7 +46,7 @@ stages:
         script: |
           tree
           pwd
-          ls /home/vsts/work
+          ls /home/vsts/work/1/s
     - task: CmdLine@2
       inputs:
         script: |
