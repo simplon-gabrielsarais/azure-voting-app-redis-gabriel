@@ -3,7 +3,6 @@ trigger:
 
 stages :
 - stage: Build_docker_image
-  condition: succeeded()
   displayName: Build docker image 
   jobs:
   - job: Get_Version
