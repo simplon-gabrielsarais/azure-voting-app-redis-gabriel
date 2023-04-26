@@ -1,6 +1,7 @@
 trigger:
 - master
 
+stages :
 - stage: Build_docker_image
   condition: succeeded()
   displayName: Build docker image 
