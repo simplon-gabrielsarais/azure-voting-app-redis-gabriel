@@ -234,6 +234,7 @@ stages:
       inputs:
         testResultsFormat: 'NUnit'
         testResultsFiles: 'owaspzap/test-results.xml'
+        mergeTestResults: true
 
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
