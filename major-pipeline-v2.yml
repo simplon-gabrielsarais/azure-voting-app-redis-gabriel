@@ -44,7 +44,8 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
-          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          sudo curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          exit
           grype dir:/home > grype.json
           cat grype.json
 
