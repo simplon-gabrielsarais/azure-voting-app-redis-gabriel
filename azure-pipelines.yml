@@ -169,59 +169,59 @@ stages:
         scantype: 'targetedScan'
         url: 'http://qal.distributeur-de-pain.best'
     
-    - task: Bash@3
+    - task: CmdLine@2
       inputs:
-        targetType: 'inline'
         script: |
           sudo npm install -g handlebars-cmd
-                  sudo cat <<</plop> > owaspzap/nunit-template.hbs
-                  <plop>
-                  {{#each site}}
-                  <test-run
-                      id="2"
-                      name="Owasp test"
-                      start-time="{{../[@generated]}}"  >
-                      <test-suite
-                          id="{{@index}}"
-                          type="Assembly"
-                          name="{{[@name]}}"
-                          result="Failed"
-                          failed="{{alerts.length}}">
-                          <attachments>
-                              <attachment>
-                                  <filePath>owaspzap/report.html</filePath>
-                              </attachment>
-                          </attachments>
-                      {{#each alerts}}
-                      <test-case
-                          id="{{@index}}"
-                          name="{{alert}}"
-                          result="Failed"
-                          fullname="{{alert}}"
-                          time="1">
-                              <failure>
-                                      <message>
-                                       <![CDATA[{{{desc}}}]]>
-                                  </message>
-                                  <stack-trace>
-                                      <![CDATA[
-                  Solution:
-                  {{{solution}}}
-                  Reference:
-                  {{{reference}}}
-                  instances:{{#each instances}}
-                  * {{uri}}
-                      - {{method}}
-                      {{#if evidence}}- {{{evidence}}}{{/if}}
-                                       {{/each}}]]>
-                                   </stack-trace>
-                              </failure>
-                      </test-case>
-                      {{/each}}
-                      </test-suite>
-                  </test-run>
-                  {{/each}}
-                  </plop>
+                            sudo cat <<EOF > owaspzap/nunit-template.hbs
+                            <plop>
+                            {{#each site}}
+                            <test-run
+                                id="2"
+                                name="Owasp test"
+                                start-time="{{../[@generated]}}"  >
+                                <test-suite
+                                    id="{{@index}}"
+                                    type="Assembly"
+                                    name="{{[@name]}}"
+                                    result="Failed"
+                                    failed="{{alerts.length}}">
+                                    <attachments>
+                                        <attachment>
+                                            <filePath>owaspzap/report.html</filePath>
+                                        </attachment>
+                                    </attachments>
+                                {{#each alerts}}
+                                <test-case
+                                    id="{{@index}}"
+                                    name="{{alert}}"
+                                    result="Failed"
+                                    fullname="{{alert}}"
+                                    time="1">
+                                        <failure>
+                                                <message>
+                                                 <![CDATA[{{{desc}}}]]>
+                                            </message>
+                                            <stack-trace>
+                                                <![CDATA[
+                            Solution:
+                            {{{solution}}}
+                            Reference:
+                            {{{reference}}}
+                            instances:{{#each instances}}
+                            * {{uri}}
+                                - {{method}}
+                                {{#if evidence}}- {{{evidence}}}{{/if}}
+                                                 {{/each}}]]>
+                                             </stack-trace>
+                                        </failure>
+                                </test-case>
+                                {{/each}}
+                                </test-suite>
+                            </test-run>
+                            {{/each}}
+                            </plop>
+                            EOF
       displayName: 'Owasp Nunit Template'
 
     - task: Bash@3
