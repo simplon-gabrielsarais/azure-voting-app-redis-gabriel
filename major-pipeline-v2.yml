@@ -32,11 +32,11 @@ stages:
         Dockerfile: 'Dockerfile'
         tags: 'latest'
       
-- stage: grype_test
+- stage: Grype_test
   displayName: grype test
   condition: succeeded()
   jobs:
-  - job: grype_test
+  - job: Grype_test
     displayName: Grype test
     pool:
       vmImage: 'ubuntu-latest'
@@ -56,8 +56,8 @@ stages:
 
 - stage: VerificationGrype
   displayName: Vérification manuelle Grype
-  dependsOn: grype_test
-  condition: ne(dependencies.grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities found')
+  dependsOn: Grype_test
+  condition: ne(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],'No vulnerabilities found')
   jobs:
   - job: Verifmanuelle
     pool: server
@@ -72,8 +72,8 @@ stages:
 
 - stage: QAL_Deployment
   displayName: Qal
-  dependsOn: grype_test
-  condition: eq(dependencies.grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities found')
+  dependsOn: Grype_test
+  condition: eq(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],'No vulnerabilities found')
   jobs:
   - job: QAL_Deploy
     displayName: Deploy on QAL 
