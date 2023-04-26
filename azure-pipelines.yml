@@ -225,7 +225,9 @@ stages:
     - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: 'handlebars owaspzap/report.json < owaspzap/nunit-template.hbs > owaspzap/test-results.xml'
+        script: |
+          handlebars owaspzap/report.json < owaspzap/nunit-template.hbs > owaspzap/test-results.xml
+          cat owaspzap/test-results.xml
       displayName: 'Generate Nunit type file'
     
     - task: PublishTestResults@2
