@@ -32,6 +32,22 @@ stages:
         Dockerfile: 'Dockerfile'
         tags: 'latest'
       
+- stage: 
+  displayName: grype_test
+  condition: succeeded()
+  jobs:
+  - job: grype-test
+    displayName: Grype test
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          grype dir:/home > grype.json
+          cat grype.json
+
 - stage: QAL_Deployment
   displayName: Qal
   jobs:
