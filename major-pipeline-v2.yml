@@ -36,7 +36,7 @@ stages:
   displayName: grype_test
   condition: succeeded()
   jobs:
-  - job: grype-test
+  - job: grype_test
     displayName: Grype test
     pool:
       vmImage: 'ubuntu-latest'
