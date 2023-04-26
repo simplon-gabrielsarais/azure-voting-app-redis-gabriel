@@ -174,14 +174,9 @@ stages:
           docker run \
           -- volume $(pwd)/wrk:/output:rw \
           -- volume $(pwd)/wrk:/zap/wrk:rw \
-          registry.gitlab.com/gitlab-org/security-products/dast:latest /analyze -t http://qal.distributeur-de-pain.best \
+          gitlab.com/gitlab-org/security-products/dast:latest /analyze -t http://qal.distributeur-de-pain.best \
           -- full-scan True \
           -r report.html -x report.xml
-
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'NUnit'
-        testResultsFiles: '**/report.xml'
     
     - task: CmdLine@2
       inputs:
@@ -191,12 +186,16 @@ stages:
       inputs:
         script: |
           wget https://udomain.dl.sourceforge.net/project/saxon/Saxon- HE/10/Java/SaxonHE10–3J.zip
-          
           unzip SaxonHE10–3J.zip
     
     - task: CmdLine@2
       inputs:
         script: 'java -jar saxon-he-10.3.jar -xsl:$(Agent.ReleaseDirectory)/OWASPToNUnit3.xslt -s:$(Agent.ReleaseDirectory)/wrk/report.xml -o:$(Agent.ReleaseDirectory)/parsedreport.xml'
+
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'NUnit'
+        testResultsFiles: '**/report.xml'
 
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
