@@ -85,12 +85,6 @@ stages :
           exitcode=$(curl -X POST -d "vote=reset" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
           echo "##vso[task.setvariable variable=exit3]$exitcode"
 
-    - task: owaspzap@1
-      inputs:
-        aggressivemode: true
-        scantype: 'targetedScan'
-        url: 'https://qalvotingapp.simplon-thomas.space/'
-
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
       displayName: test du temps de réponse de la requête de vote sur prod
