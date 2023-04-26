@@ -48,7 +48,7 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
-          grype dir:/home > grype.json
+          sudo grype dir:/home > grype.json
           cat grype.json
 
 
