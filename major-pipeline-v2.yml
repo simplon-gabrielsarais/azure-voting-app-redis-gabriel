@@ -50,16 +50,14 @@ stages:
       inputs:
         script: |
           sudo grype dir:/home/vsts/work/1/
-          echo $?
-          gryperesult=$(sudo grype dir:/home/vsts/work/1/)
-          echo $gryperesult
+          gryperesult=$(echo $?)
           echo "##vso[task.setvariable variable=gryre;isOutput=true]$gryperesult"
 
 
 - stage: VerificationGrype
   displayName: Vérification manuelle Grype
   dependsOn: Grype_test
-  condition: ne(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],'No vulnerabilities found')
+  condition: ne(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],0)
   jobs:
   - job: Verifmanuelle
     pool: server
@@ -75,7 +73,7 @@ stages:
 - stage: QAL_Deployment
   displayName: Qal
   dependsOn: Grype_test
-  condition: eq(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],'No vulnerabilities found')
+  condition: eq(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],0)
   jobs:
   - job: QAL_Deploy
     displayName: Deploy on QAL 
