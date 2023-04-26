@@ -45,9 +45,12 @@ stages:
       inputs:
         script: |
           sudo curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
-          exit
+    - task: CmdLine@2
+      inputs:
+        script: |
           grype dir:/home > grype.json
           cat grype.json
+
 
 - stage: QAL_Deployment
   displayName: Qal
