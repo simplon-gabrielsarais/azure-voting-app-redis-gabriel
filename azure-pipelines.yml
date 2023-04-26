@@ -173,7 +173,8 @@ stages:
       inputs:
         script: |
           sudo npm install -g handlebars-cmd
-          sudo cat <<'{{/each}}' > owaspzap/nunit-template.hbs
+          sudo cat <<'</plop>' > owaspzap/nunit-template.hbs
+                    <plop>
                     {{#each site}}
                     <test-run
                         id="2"
@@ -219,6 +220,7 @@ stages:
                         </test-suite>
                     </test-run>
                     {{/each}}
+                    </plop>
       displayName: 'Owasp Nunit Template'
 
     - task: Bash@3
