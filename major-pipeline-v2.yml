@@ -54,7 +54,7 @@ stages:
           echo "##vso[task.setvariable variable=gryre;isOutput=true]$gryperesult"
 
 
-- stage: VérificationGrype
+- stage: VerificationGrype
   displayName: Vérification manuelle Grype
   dependsOn: Grype_test
   condition: ne(dependencies.grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities found')
