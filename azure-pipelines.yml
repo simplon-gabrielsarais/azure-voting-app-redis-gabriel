@@ -175,7 +175,6 @@ stages:
         script: |
           sudo npm install -g handlebars-cmd
                   sudo cat <<EOF > owaspzap/nunit-template.hbs
-                <test-tetu
                   {{#each site}}
                   <test-run
                       id="2"
@@ -221,7 +220,6 @@ stages:
                       </test-suite>
                   </test-run>
                   {{/each}}
-                </test-tetu>  
                   EOF
       displayName: 'Owasp Nunit Template'
 
