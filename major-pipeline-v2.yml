@@ -263,10 +263,34 @@ stages:
         notifyUsers: |
           tjulian.ext@simplonformations.onmicrosoft.com
         instructions: 'Please validate the build configuration and resume'
-        onTimeout: 'resume'
+        onTimeout: 'reject'
 
+- stage: 'Rollback'
+  dependsOn: ManualIntervention
+  condition: failed()
+  displayName: 'Rollback due to failed manual intervention'
+  jobs:
+    - job: 'DeleteCanary'
+      displayName: 'Delete canary due to malfunction'
+      pool:
+        vmImage: 'ubuntu-latest'
+      steps:
+      - task: Kubernetes@1
+        name: deletecanary
+        displayName: deletion of canary release
+        condition: succeeded()
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceEndpoint: 'clusterconnection'
+          namespace: 'prod'
+          command: 'delete'
+          arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/canary/deletion-canary.yml'
+          secretType: 'dockerRegistry'
+          containerRegistryType: 'Azure Container Registry'
 
 - stage: 'DeployOnProd'
+  dependsOn: ManualIntervention
+  condition: succeeded()
   displayName: 'Deploy on Prod' 
   jobs:
   - job: 'Deployonprod' 
@@ -274,7 +298,6 @@ stages:
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
-
     - task: Kubernetes@1
       name: deleteprodapp
       displayName: replacement of production application
@@ -286,8 +309,6 @@ stages:
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/prod/deploy_app.yml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
-      
-
     - task: KubernetesManifest@0
       name: kubeonprod
       displayName: deployment of production application
@@ -297,13 +318,11 @@ stages:
         kubernetesServiceConnection: 'clusterconnection'
         namespace: 'prod'
         manifests: '**/kubernetes/prod/deploy_app.yml'
-
     - task: Bash@3
       name: waitingfordeploy
       inputs:
         targetType: 'inline'
         script: 'sleep 30'
-
     - task: Kubernetes@1
       name: deletecanary
       displayName: deletion of canary release
@@ -316,14 +335,12 @@ stages:
         arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/canary/deletion-canary.yml'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
-
     - task: Bash@3
       name: waitingfordeployprod
       displayName: Waiting for deploy Production
       inputs:
         targetType: 'inline'
         script: 'sleep 20'
-
     - task: Bash@3
       name: checksiteprod
       displayName: Test de la requête pour prod
