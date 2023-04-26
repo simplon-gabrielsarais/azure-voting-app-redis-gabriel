@@ -1,15 +1,14 @@
 trigger:
 - master
 
-pool:
-    vmImage: ubuntu-latest 
-
 - stage: Build_docker_image
   condition: succeeded()
   displayName: Build docker image 
   jobs:
   - job: Get_Version
-    displayName: Get Version Build 
+    displayName: Get Version Build
+    pool:
+      vmImage: ubuntu-latest
     steps:
     - task: CmdLine@2
       displayName: Comparaison version application
