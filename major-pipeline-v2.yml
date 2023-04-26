@@ -210,7 +210,7 @@ stages:
 
 - stage: 'ManualIntervention'
   condition: succeeded()
-  dependsOn: kubeonprodcanary
+  dependsOn: Deploy_canary
   displayName: 'In waiting of validation of working canary release' 
   jobs:
   - job: waitForValidation
