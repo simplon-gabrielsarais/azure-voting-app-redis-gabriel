@@ -63,7 +63,7 @@ stages:
     pool: server
     steps:
     - task: ManualValidation@0
-      timeoutInMinutes: 4320 # task times out in 3 days
+      timeoutInMinutes: 240 # task times out in 4 hours
       inputs:
         notifyUsers: |
           tjulian.ext@simplonformations.onmicrosoft.com
