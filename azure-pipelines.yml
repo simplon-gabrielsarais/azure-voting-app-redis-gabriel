@@ -191,7 +191,8 @@ stages:
                                   <filePath>owaspzap/report.html</filePath>
                               </attachment>
                           </attachments>
-                      {{#each alerts}}<test-case
+                      {{#each alerts}}
+                      <test-case
                           id="{{@index}}"
                           name="{{alert}}"
                           result="Failed"
