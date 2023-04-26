@@ -50,7 +50,7 @@ stages:
       inputs:
         script: |
           sudo grype dir:/home/vsts/work/1/ > grype.json
-          gryperesult =$(cat grype.json)
+          gryperesult=$(cat grype.json)
           echo "##vso[task.setvariable variable=gryre;isOutput=true]$gryperesult"
 
 
