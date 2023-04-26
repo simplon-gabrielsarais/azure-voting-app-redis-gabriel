@@ -57,7 +57,7 @@ stages:
 - stage: QAL_Deployment
   displayName: Qal
   dependsOn: Grype_test
-  condition: eq(dependencies.grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities found')
+  condition: eq(dependencies.grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities')
   jobs:
   - job: QAL_Deploy
     displayName: Deploy on QAL 
