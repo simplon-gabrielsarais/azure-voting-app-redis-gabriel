@@ -174,7 +174,7 @@ stages:
           docker run \
           -- volume $(pwd)/wrk:/output:rw \
           -- volume $(pwd)/wrk:/zap/wrk:rw \
-          gitlab.com/gitlab-org/security-products/dast:latest /analyze -t http://qal.distributeur-de-pain.best \
+          registry.gitlab.com/gitlab-org/security-products/dast:${VERSION:-latest} /analyze -t http://qal.distributeur-de-pain.best \
           -- full-scan True \
           -r report.html -x report.xml
     
