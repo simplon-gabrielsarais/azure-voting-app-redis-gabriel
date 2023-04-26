@@ -171,7 +171,12 @@ stages:
         script: |
           mkdir wrk
           chmod 777 wrk
-          docker run — rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t qal.distributeur-de-pain.best -f openapi -g api-scan.conf -x report.xml -r report.html
+          docker run \
+          -- volume $(pwd)/wrk:/output:rw \
+          -- volume $(pwd)/wrk:/zap/wrk:rw \
+          owasp/zap2docker-weekly zap-api-scan.py -t http://qal.distributeur-de-pain.best \
+          -- full-scan True \
+          -r report.html -x report.xml
     
     - task: CmdLine@2
       inputs:
