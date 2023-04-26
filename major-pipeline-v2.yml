@@ -44,6 +44,10 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
+          tree
+    - task: CmdLine@2
+      inputs:
+        script: |
           sudo curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
     - task: CmdLine@2
       inputs:
