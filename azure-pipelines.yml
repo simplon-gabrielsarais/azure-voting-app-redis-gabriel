@@ -162,12 +162,42 @@ stages:
         script: |
           exitcode=$(curl -X POST -d "vote=reset" http://qal.distributeur-de-pain.best -w "%{http_code}" -o /dev/null)
           echo "##vso[task.setvariable variable=exit3]$exitcode"
-
-    - task: owaspzap@1
+    - task: DockerInstaller@0
       inputs:
-        scantype: 'targetedScan'
-        url: 'http://qal.distributeur-de-pain.best'
-        
+        dockerVersion: '17.09.0-ce'
+
+    - task: CmdLine@2
+      inputs:
+        script: |
+          mkdir wrk
+          chmod 777 wrk
+          docker run \
+          -- volume $(pwd)/wrk:/output:rw \
+          -- volume $(pwd)/wrk:/zap/wrk:rw \
+          registry.gitlab.com/gitlab-org/security-products/dast:latest /analyze -t http://qal.distributeur-de-pain.best \
+          -- full-scan True \
+          -r report.html -x report.xml
+
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'NUnit'
+        testResultsFiles: '**/report.xml'
+    
+    - task: CmdLine@2
+      inputs:
+        script: 'wget -O OWASPToNUnit3.xslt https://gist.githubusercontent.com/sudhinsr/6dad07c20785d8d00ffd406a6c581b15/raw/42b2fe2201f6f054b97673239970e4d6eca2e308/OWASPToNUnit3.xslt'
+  
+    - task: CmdLine@2
+      inputs:
+        script: |
+          wget https://udomain.dl.sourceforge.net/project/saxon/Saxon- HE/10/Java/SaxonHE10–3J.zip
+          
+          unzip SaxonHE10–3J.zip
+    
+    - task: CmdLine@2
+      inputs:
+        script: 'java -jar saxon-he-10.3.jar -xsl:$(Agent.ReleaseDirectory)/OWASPToNUnit3.xslt -s:$(Agent.ReleaseDirectory)/wrk/report.xml -o:$(Agent.ReleaseDirectory)/parsedreport.xml'
+
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
       name: timetoresp
