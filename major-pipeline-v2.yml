@@ -54,10 +54,26 @@ stages:
           echo "##vso[task.setvariable variable=gryre;isOutput=true]$gryperesult"
 
 
+- stage: VérificationGrype
+  displayName: Vérification manuelle Grype
+  dependsOn: Grype_test
+  condition: ne(dependencies.grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities found')
+  jobs:
+  - job: Verifmanuelle
+    pool: server
+    steps:
+    - task: ManualValidation@0
+      timeoutInMinutes: 4320 # task times out in 3 days
+      inputs:
+        notifyUsers: |
+          tjulian.ext@simplonformations.onmicrosoft.com
+        instructions: 'Please check the problem for Grype'
+        onTimeout: 'reject'
+
 - stage: QAL_Deployment
   displayName: Qal
   dependsOn: Grype_test
-  condition: eq(dependencies.grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities')
+  condition: eq(dependencies.grype_test.outputs['grype_test.finalresult.gryre'],'No vulnerabilities found')
   jobs:
   - job: QAL_Deploy
     displayName: Deploy on QAL 
