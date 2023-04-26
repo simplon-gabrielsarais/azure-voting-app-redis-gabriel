@@ -209,7 +209,8 @@ stages:
         manifests: '**/kubernetes/canary/deployment-canary.yaml'
 
 - stage: 'ManualIntervention'
-  condition: succeeded() 
+  condition: succeeded()
+  dependsOn: kubeonprodcanary
   displayName: 'In waiting of validation of working canary release' 
   jobs:
   - job: waitForValidation
