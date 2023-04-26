@@ -171,12 +171,7 @@ stages:
         script: |
           mkdir wrk
           chmod 777 wrk
-          docker run \
-          -- volume $(pwd)/wrk:/output:rw \
-          -- volume $(pwd)/wrk:/zap/wrk:rw \
-          registry.gitlab.com/gitlab-org/security-products/dast:${VERSION:-latest} /analyze -t http://qal.distributeur-de-pain.best \
-          -- full-scan True \
-          -r report.html -x report.xml
+          docker run — rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-api-scan.py -t qal.distributeur-de-pain.best -f openapi -g api-scan.conf -x report.xml -r report.html
     
     - task: CmdLine@2
       inputs:
@@ -195,7 +190,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'NUnit'
-        testResultsFiles: '**/report.xml'
+        testResultsFiles: '**/parsedreport.xml'
 
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
