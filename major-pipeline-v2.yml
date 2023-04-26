@@ -187,9 +187,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          handlebars owaspzap/report.json < owaspzap/nunit-template.hbs > owaspzap/test-results.xml
           sed -e '1s/^/<root>\n/' -e '$s/$/\n<\/root>/' owaspzap/test-results.xml > owaspzap/final-output.xml
           cat owaspzap/final-output.xml
+          handlebars owaspzap/report.json < owaspzap/nunit-template.hbs > owaspzap/final-output.xml
       displayName: 'Generate Nunit type file'
     
     - task: PublishTestResults@2
