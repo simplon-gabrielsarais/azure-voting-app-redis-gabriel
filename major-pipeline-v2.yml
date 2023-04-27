@@ -177,7 +177,12 @@ stages:
   displayName: QAL Test reponse
   dependsOn: 
   - QAL_Deployment
-  condition: succeeded()
+  - VerificationOWASP
+  condition:|
+    or(
+      succeeded('QAL_Deployment'),
+      succeeded('VerificationOWASP')
+    )
   jobs:
   - job: QAL_Deploy
     displayName: Deploy on QAL 
@@ -207,41 +212,6 @@ stages:
         script: |
           reponseqal=$(curl -X POST -d "vote=free" http://qalvotingapp.simplon-thomas.space -w "%{time_total}" -o /dev/null)
           echo "##vso[task.setvariable variable=repqal]$reponseqal"
-
-
-- stage: Delete_Qal
-  condition: failed()
-  dependsOn: VerificationOWASP
-  displayName: Suppression de la QAL si failed
-  jobs:
-    - job: Delete_QAL
-      displayName: Suppression de la QAL
-      pool: 
-        vmImage: 'ubuntu-latest'
-      steps:
-      - task: Kubernetes@1
-        name: deleteqal
-        inputs:
-          connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'clusterconnection'
-          namespace: 'qal'
-          command: 'delete'
-          arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal/'
-          secretType: 'dockerRegistry'
-          containerRegistryType: 'Azure Container Registry'
-
-
-
-- stage: Qal_test_charge
-  condition: succeeded()
-  dependsOn: Qal_test
-  displayName: Test de Charge
-  jobs:
-    - job: Delete_QAL
-      displayName: Suppression de la QAL
-      pool: 
-        vmImage: 'ubuntu-latest'
-      steps:
       - task: CmdLine@2
         name : chargetest
         displayName: Test de charge de la qal
@@ -300,9 +270,31 @@ stages:
           targetType: 'inline'
           script: 'echo "QAL DELETION"'
 
+- stage: Delete_Qal
+  condition: failed()
+  dependsOn: VerificationOWASP
+  displayName: Suppression de la QAL si failed
+  jobs:
+    - job: Delete_QAL
+      displayName: Suppression de la QAL
+      pool: 
+        vmImage: 'ubuntu-latest'
+      steps:
+      - task: Kubernetes@1
+        name: deleteqal
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceEndpoint: 'clusterconnection'
+          namespace: 'qal'
+          command: 'delete'
+          arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal/'
+          secretType: 'dockerRegistry'
+          containerRegistryType: 'Azure Container Registry'
+
+
 - stage: Deploy_canary
   dependsOn:
-  - QAL_test_charge
+  - QAL_test
   condition: and (succeeded(), gt(dependencies.QAL_test_charge.outputs['QAL_Deploy.countpod.countpods'],2))
   displayName: 'Deploy Canary Release' 
   jobs:
