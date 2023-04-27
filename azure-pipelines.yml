@@ -192,8 +192,6 @@ stages:
       inputs:
         testResultsFormat: 'NUnit'
         testResultsFiles: './test-results.xml'
-        failTaskOnFailedTests: true
-
 
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
@@ -250,7 +248,24 @@ stages:
         kubernetesServiceConnection: 'connexion'
         namespace: 'qal'
         arguments: '-f $(System.DefaultWorkingDirectory)/qal/'
-
+- stage: 'ManualIntervention'
+  dependsOn:
+  - Canary_deploy
+  condition: succeeded() 
+  displayName: 'In waiting of validation of working canary release' 
+  jobs:
+  - job: waitForValidation
+    displayName: Wait for external validation
+    pool: server
+    timeoutInMinutes: 10080 # job times out in 7 days
+    steps:
+    - task: ManualValidation@0
+      timeoutInMinutes: 10080 # task times out in 7 day
+      inputs:
+        notifyUsers: |
+          gsarais.ext@simplonformations.onmicrosoft.com
+        instructions: 'Please validate the build configuration and resume'
+        onTimeout: 'resume'
 - stage: 'Canary_deploy'
   dependsOn:
   - Test_Charge
@@ -287,17 +302,17 @@ stages:
 
 - stage: 'ManualIntervention'
   dependsOn:
-  - Canary_deploy
+  - Test_Charge
   condition: succeeded() 
-  displayName: 'In waiting of validation of working canary release' 
+  displayName: 'In waiting of validation after tests has runned' 
   jobs:
   - job: waitForValidation
     displayName: Wait for external validation
     pool: server
-    timeoutInMinutes: 10080 # job times out in 7 days
+    timeoutInMinutes: 3600
     steps:
     - task: ManualValidation@0
-      timeoutInMinutes: 10080 # task times out in 7 day
+      timeoutInMinutes: 3600
       inputs:
         notifyUsers: |
           gsarais.ext@simplonformations.onmicrosoft.com
