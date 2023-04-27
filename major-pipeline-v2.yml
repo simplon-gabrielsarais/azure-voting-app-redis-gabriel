@@ -294,10 +294,10 @@ stages:
   dependsOn:
   - QAL_test
   condition: gt(dependencies.QAL_test.outputs['QAL_Deploy.countpod.countpods'],2)
-  displayName: 'Deploy Canary Release' 
+  displayName: Deploy Canary Release
   jobs:
-  - job: 'Deploy_canary' 
-    displayName: 'Deployment of Canary Release' 
+  - job: Deploy_canary
+    displayName: Deployment of Canary Release
     pool:
       vmImage: 'ubuntu-latest' 
     steps:
@@ -313,6 +313,8 @@ stages:
         manifests: '**/kubernetes/canary/deployment-canary.yaml'
 
 - stage: ManualInterventionCanary
+  dependsOn:
+  - Deploy_canary
   condition: succeeded()
   displayName: 'In waiting of validation of working canary release' 
   jobs:
