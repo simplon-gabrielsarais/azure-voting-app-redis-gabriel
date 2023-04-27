@@ -105,6 +105,7 @@ stages:
       name: "scriptver"
 
 - stage: 'Build_docker_image'
+  condition: succeeded()
   variables:
     verrep: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep'] ]
     vernew: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.vernew'] ]
