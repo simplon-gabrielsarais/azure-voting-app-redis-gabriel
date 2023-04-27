@@ -132,7 +132,7 @@ stages:
   dependsOn:
   - Get_Versions
   - Build_docker_image
-  condition: succeeded()
+  condition: succeeded(Build_docker_image)
   displayName: 'Deploy on QAL' 
   jobs:
   - job: 'QAL_Deploy'
@@ -160,7 +160,7 @@ stages:
         rolloutStatusTimeout: '60'
 
 - stage: 'Test_Charge'
-  condition: succeeded()
+  condition: succeeded(QAL_Deployment)
   dependsOn:
   - Get_Versions
   - QAL_Deployment
