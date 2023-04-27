@@ -29,9 +29,46 @@ stages:
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
-    
+
+- stage: Grype_test
+  displayName: grype test
+  condition: succeeded()
+  jobs:
+  - job: Grype_test
+    displayName: Grype test
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+          sudo curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+    - task: CmdLine@2
+      name: finalresult
+      inputs:
+        script: |
+          sudo grype dir:/home/vsts/work/1/
+          gryperesult=$(echo $?)
+          echo "##vso[task.setvariable variable=gryre;isOutput=true]$gryperesult"
+- stage: VerificationGrype
+  displayName: Vérification manuelle Grype
+  dependsOn: Grype_test
+  condition: ne(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],0)
+  jobs:
+  - job: Verifmanuelle
+    pool: server
+    steps:
+    - task: ManualValidation@0
+      timeoutInMinutes: 240 # task times out in 4 hours
+      inputs:
+        notifyUsers: |
+          tjulian.ext@simplonformations.onmicrosoft.com
+        instructions: 'Please check the problem for Grype'
+        onTimeout: 'reject'
+
 - stage: 'Get_Versions' 
-  displayName: 'Get_Versions' 
+  displayName: 'Get_Versions'
+  dependsOn: Grype_test
   jobs:
   - job: 'Get_Versions' 
     displayName: 'Get_Versions' 
