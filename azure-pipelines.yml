@@ -312,7 +312,7 @@ stages:
   dependsOn:
   - Manualvalidation
   - Get_Versions
-  condition: or(and(gt(dependencies.Test_Charge.outputs['Test.GetPodsCount.appcnt'],2),succeeded(Test_Charge)),succeeded(Manualvalidation))
+  condition: or(and(gt(dependencies.Test_Charge.outputs['Test.GetPodsCount.appcnt'],2),succeeded('Test_Charge')),succeeded('Manualvalidation'))
   displayName: 'Canary_deploy' 
   jobs:
   - job: 'canary'
