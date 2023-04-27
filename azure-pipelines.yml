@@ -286,27 +286,29 @@ stages:
         kubernetesServiceConnection: 'connexion'
         namespace: 'qal'
         arguments: '-f $(System.DefaultWorkingDirectory)/qal/'
-- stage: 'ManualIntervention'
+
+- stage: 'Manualvalidation'
   dependsOn:
-  - Canary_deploy
-  condition: succeeded() 
-  displayName: 'In waiting of validation of working canary release' 
+  - Test_Charge
+  condition: failed() 
+  displayName: 'In waiting of validation after tests has runned' 
   jobs:
   - job: waitForValidation
     displayName: Wait for external validation
     pool: server
-    timeoutInMinutes: 10080 # job times out in 7 days
+    timeoutInMinutes: 3600
     steps:
     - task: ManualValidation@0
-      timeoutInMinutes: 10080 # task times out in 7 day
+      timeoutInMinutes: 3600
       inputs:
         notifyUsers: |
           gsarais.ext@simplonformations.onmicrosoft.com
         instructions: 'Please validate the build configuration and resume'
         onTimeout: 'resume'
+
 - stage: 'Canary_deploy'
   dependsOn:
-  - Test_Charge
+  - Manualvalidation
   - Get_Versions
   condition: gt(dependencies.Test_Charge.outputs['Test.GetPodsCount.appcnt'],2)
   displayName: 'Canary_deploy' 
@@ -338,19 +340,19 @@ stages:
         rolloutStatusTimeout: '120'
       name: "kube_canar"
 
-- stage: 'Manualvalidation'
+- stage: 'ManualIntervention'
   dependsOn:
-  - Test_Charge
-  condition: failed() 
-  displayName: 'In waiting of validation after tests has runned' 
+  - Canary_deploy
+  condition: succeeded() 
+  displayName: 'In waiting of validation of working canary release' 
   jobs:
   - job: waitForValidation
     displayName: Wait for external validation
     pool: server
-    timeoutInMinutes: 3600
+    timeoutInMinutes: 10080 # job times out in 7 days
     steps:
     - task: ManualValidation@0
-      timeoutInMinutes: 3600
+      timeoutInMinutes: 10080 # task times out in 7 day
       inputs:
         notifyUsers: |
           gsarais.ext@simplonformations.onmicrosoft.com
