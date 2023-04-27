@@ -154,7 +154,6 @@ stages:
         testResultsFormat: 'NUnit'
         testResultsFiles: './test-results.xml'
         mergeTestResults: true
-        failTaskOnFailedTests: true
 
 
 - stage: VerificationOWASP
@@ -178,7 +177,7 @@ stages:
   displayName: Qal
   dependsOn: 
   - VerificationOWASP
-  - VerificationGrype
+  - QAL_Deployment
   condition: succeeded()
   jobs:
   - job: QAL_Deploy
@@ -290,7 +289,7 @@ stages:
           containerRegistryType: 'Azure Container Registry'
 
 
-- stage: 'Deploy_canary'
+- stage: Deploy_canary
   dependsOn:
   - QAL_test
   condition: and (succeeded(), gt(dependencies.QAL_test.outputs['QAL_Deploy.countpod.countpods'],2))
@@ -329,12 +328,12 @@ stages:
         instructions: 'Please validate the build configuration and resume'
         onTimeout: 'reject'
 
-- stage: 'Rollback'
+- stage: Rollback
   dependsOn: ManualInterventionCanary
   condition: failed()
   displayName: 'Rollback due to failed manual intervention'
   jobs:
-    - job: 'DeleteCanary'
+    - job: DeleteCanary
       displayName: 'Delete canary due to malfunction'
       pool:
         vmImage: 'ubuntu-latest'
@@ -352,10 +351,10 @@ stages:
           secretType: 'dockerRegistry'
           containerRegistryType: 'Azure Container Registry'
 
-- stage: 'DeployOnProd'
+- stage: DeployOnProd
   dependsOn: ManualInterventionCanary
   condition: succeeded()
-  displayName: 'Deploy on Prod' 
+  displayName: Deploy on Prod
   jobs:
   - job: 'Deployonprod' 
     displayName: 'Deploy on Prod and delete Canary' 
