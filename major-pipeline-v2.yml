@@ -156,6 +156,36 @@ stages:
         mergeTestResults: true
         failTaskOnFailedTests: true
 
+
+- stage: VerificationOWASP
+  condition: failed()
+  dependsOn: Qal_deployment
+  displayName: 'In waiting of validation of OWASP report' 
+  jobs:
+  - job: waitForValidation
+    displayName: Wait for external validation
+    pool: server
+    steps:
+    - task: ManualValidation@0
+      timeoutInMinutes: 240 # task times out in 3 days
+      inputs:
+        notifyUsers: |
+          tjulian.ext@simplonformations.onmicrosoft.com
+        instructions: 'Please validate with OWASP report'
+        onTimeout: 'reject'
+
+- stage: QAL_test
+  displayName: Qal
+  dependsOn: 
+  - VerificationOWASP
+  - VerificationGrype
+  condition: succeeded()
+  jobs:
+  - job: QAL_Deploy
+    displayName: Deploy on QAL 
+    pool:
+      vmImage: 'ubuntu-latest' 
+    steps:
         
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
@@ -238,9 +268,9 @@ stages:
         script: 'echo "QAL DELETION"'
 
 
-- stage: 'Delete_Qal'
+- stage: Delete_Qal
   condition: failed()
-  dependsOn: QAL_Deployment
+  dependsOn: VerificationOWASP
   displayName: Suppression de la QAL si failed
   jobs:
     - job: Delete_QAL
@@ -262,8 +292,8 @@ stages:
 
 - stage: 'Deploy_canary'
   dependsOn:
-  - QAL_Deployment
-  condition: and (succeeded(), gt(dependencies.QAL_Deployment.outputs['QAL_Deploy.countpod.countpods'],2))
+  - QAL_test
+  condition: and (succeeded(), gt(dependencies.QAL_test.outputs['QAL_Deploy.countpod.countpods'],2))
   displayName: 'Deploy Canary Release' 
   jobs:
   - job: 'Deploy_canary' 
