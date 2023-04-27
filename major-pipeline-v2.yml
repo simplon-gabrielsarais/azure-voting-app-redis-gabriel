@@ -312,7 +312,7 @@ stages:
         percentage: '50'
         manifests: '**/kubernetes/canary/deployment-canary.yaml'
 
-- stage: 'ManualIntervention'
+- stage: ManualInterventionCanary
   condition: succeeded()
   dependsOn: Deploy_canary
   displayName: 'In waiting of validation of working canary release' 
@@ -330,7 +330,7 @@ stages:
         onTimeout: 'reject'
 
 - stage: 'Rollback'
-  dependsOn: ManualIntervention
+  dependsOn: ManualInterventionCanary
   condition: failed()
   displayName: 'Rollback due to failed manual intervention'
   jobs:
@@ -353,7 +353,7 @@ stages:
           containerRegistryType: 'Azure Container Registry'
 
 - stage: 'DeployOnProd'
-  dependsOn: ManualIntervention
+  dependsOn: ManualInterventionCanary
   condition: succeeded()
   displayName: 'Deploy on Prod' 
   jobs:
