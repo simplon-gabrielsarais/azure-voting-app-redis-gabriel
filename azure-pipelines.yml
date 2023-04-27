@@ -179,7 +179,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          $XslPath = "owasp-zap/xml_to_nunit.xslt" 
+          $XslPath = "xml_to_nunit.xslt" 
           $XmlInputPath = "report.xml"
           $XmlOutputPath = "test-results.xml"
           $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
