@@ -192,6 +192,7 @@ stages:
       inputs:
         testResultsFormat: 'NUnit'
         testResultsFiles: './test-results.xml'
+        failTaskOnFailedTests: true
 
 
     - task: CmdLine@2
