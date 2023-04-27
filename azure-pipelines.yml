@@ -171,7 +171,7 @@ stages:
       inputs:
         script: |
           chmod -R 777 ./
-          docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://qal.distributeur-de-pain.best:80 -x report.xml true
+          docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://qal.distributeur-de-pain.best:80 -x report.xml
       displayName: "Owasp Container Scan"
     
     - task: PowerShell@2
