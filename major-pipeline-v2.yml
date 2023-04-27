@@ -188,8 +188,7 @@ stages:
     displayName: Deploy on QAL 
     pool:
       vmImage: 'ubuntu-latest' 
-    steps:
-        
+    steps:      
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
       displayName: test du temps de réponse de la requête de vote sur prod
@@ -263,6 +262,7 @@ stages:
           arguments: '-f $(System.DefaultWorkingDirectory)/kubernetes/qal/'
           secretType: 'dockerRegistry'
           containerRegistryType: 'Azure Container Registry'
+
       - task: Bash@3
         name: yourverygood
         condition: succeeded()
