@@ -314,7 +314,6 @@ stages:
 
 - stage: ManualInterventionCanary
   condition: succeeded()
-  dependsOn: Deploy_canary
   displayName: 'In waiting of validation of working canary release' 
   jobs:
   - job: waitForValidation
