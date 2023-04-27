@@ -154,6 +154,7 @@ stages:
         testResultsFormat: 'NUnit'
         testResultsFiles: './test-results.xml'
         mergeTestResults: true
+        failTaskOnFailedTests: true
 
         
     - task: CmdLine@2
