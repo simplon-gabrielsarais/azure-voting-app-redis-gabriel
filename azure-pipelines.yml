@@ -69,6 +69,7 @@ stages:
 
 - stage: 'Get_Versions' 
   displayName: 'Get_Versions'
+  condition: succeeded()
   dependsOn: 
   - Grype_test
   - VerificationGrype
