@@ -326,6 +326,15 @@ stages:
         script: |
           sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
           sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
+
+    - task: KubernetesManifest@0
+      name: "kube_qal_del"
+      inputs:
+        action: 'delete'
+        kubernetesServiceConnection: 'connexion'
+        namespace: 'qal'
+        arguments: '-f $(System.DefaultWorkingDirectory)/qal/'
+
     - task: KubernetesManifest@0
       name: "delete_canary"
       inputs:
