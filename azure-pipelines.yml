@@ -50,6 +50,7 @@ stages:
           sudo grype dir:/home/vsts/work/1/
           gryperesult=$(echo $?)
           echo "##vso[task.setvariable variable=gryre;isOutput=true]$gryperesult"
+
 - stage: VerificationGrype
   displayName: Vérification manuelle Grype
   dependsOn: Grype_test
@@ -68,7 +69,9 @@ stages:
 
 - stage: 'Get_Versions' 
   displayName: 'Get_Versions'
-  dependsOn: Grype_test
+  dependsOn: 
+  - Grype_test
+  - VerificationGrype
   jobs:
   - job: 'Get_Versions' 
     displayName: 'Get_Versions' 
@@ -100,7 +103,6 @@ stages:
         #  sed -i "s/              number: [[:digit:]]\{2\}/              number: 85/g" kube_brief6/ingress.yml
       name: "scriptver"
 
-
 - stage: 'Build_docker_image'
   variables:
     verrep: $[ stageDependencies.Get_Versions.Get_Versions.outputs['scriptver.verrep'] ]
@@ -123,7 +125,6 @@ stages:
         Dockerfile: '**/Dockerfile'
         tags: $(vernew)
       name: "dockerhub_publish"
-
 
 - stage: 'QAL_Deployment'
   dependsOn:
