@@ -31,7 +31,28 @@ stages:
         command: 'buildAndPush'
         Dockerfile: 'Dockerfile'
         tags: 'latest'
-      
+
+- stage : Run_SonarCloud_Analysis
+  jobs:
+    - job: Analysis
+      displayName: Analysis
+      steps:
+      - checkout: self
+        fetchDepth: 0
+      - task: SonarCloudPrepare@1
+        inputs:
+          SonarCloud: 'SonarCloud'
+          organization: 'tjulianext'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'tjulianext_Brief_8_TJ'
+          cliProjectName: 'Brief_8_TJ'
+          cliSources: '.'
+      - task: SonarCloudAnalyze@1
+      - task: SonarCloudPublish@1
+        inputs:
+          pollingTimeoutSec: '300'
+
 - stage: Grype_test
   displayName: grype test
   condition: succeeded()
