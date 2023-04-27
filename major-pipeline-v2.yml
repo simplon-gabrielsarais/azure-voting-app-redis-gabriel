@@ -265,8 +265,8 @@ stages:
         targetType: 'inline'
         script: 'echo "QAL DELETION"'
 
-- stage: QAL_test2
-  displayName: Qal
+- stage: QAL_test
+  displayName: Qal test si manuel
   dependsOn: 
   - VerificationOWASP
   condition: succeeded()
