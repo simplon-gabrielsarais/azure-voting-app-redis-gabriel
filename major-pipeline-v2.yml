@@ -72,8 +72,14 @@ stages:
 
 - stage: QAL_Deployment
   displayName: Qal Deployment and OWASP Test
-  dependsOn: Grype_test
-  condition: eq(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],0)
+  condition: |
+    or(
+    eq(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],0),
+    succeeded('VerificationGrype')
+    )
+  dependsOn: 
+  - Grype_test
+  - VerificationGrype
   jobs:
   - job: QAL_Deploy
     displayName: Deploy on QAL 
@@ -315,7 +321,7 @@ stages:
 - stage: ManualInterventionCanary
   dependsOn:
   - Deploy_canary
-  condition: succeeded()
+  condition: succeeded('Deploy_canary')
   displayName: 'In waiting of validation of working canary release' 
   jobs:
   - job: waitForValidation
@@ -332,7 +338,7 @@ stages:
 
 - stage: Rollback
   dependsOn: ManualInterventionCanary
-  condition: failed()
+  condition: failed('ManualInterventionCanary')
   displayName: 'Rollback due to failed manual intervention'
   jobs:
     - job: DeleteCanary
@@ -355,7 +361,7 @@ stages:
 
 - stage: DeployOnProd
   dependsOn: ManualInterventionCanary
-  condition: succeeded()
+  condition: succeeded('ManualInterventionCanary')
   displayName: Deploy on Prod
   jobs:
   - job: 'Deployonprod' 
