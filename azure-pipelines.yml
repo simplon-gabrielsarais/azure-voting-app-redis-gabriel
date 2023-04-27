@@ -300,10 +300,10 @@ stages:
         rolloutStatusTimeout: '120'
       name: "kube_canar"
 
-- stage: 'ManualIntervention'
+- stage: 'Manualvalidation'
   dependsOn:
   - Test_Charge
-  condition: succeeded() 
+  condition: failed() 
   displayName: 'In waiting of validation after tests has runned' 
   jobs:
   - job: waitForValidation
