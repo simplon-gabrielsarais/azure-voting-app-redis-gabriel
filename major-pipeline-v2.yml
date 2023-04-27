@@ -96,34 +96,6 @@ stages:
         targetType: 'inline'
         script: 'sleep 45'
       
-    - task: Bash@3
-      name: checksitefreevote
-      displayName: Test de la requête pour voter free
-      condition: succeeded()
-      inputs:
-        targetType: 'inline'
-        script: |
-          exitcode=$(curl -X POST -d "vote=free" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
-          echo "##vso[task.setvariable variable=exit1]$exitcode"
-    - task: Bash@3
-      name: checksitem6mobilevote
-      displayName: Test de la requête pour voter m6mobile
-      condition: eq(variables['exit1'],'200')
-      inputs:
-        targetType: 'inline'
-        script: |
-          exitcode=$(curl -X POST -d "vote=m6mobile" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
-          echo "##vso[task.setvariable variable=exit2]$exitcode"
-    - task: Bash@3
-      name: checksitereset
-      displayName: Test de la requête pour reset
-      condition: eq(variables['exit2'],'200')
-      inputs:
-        targetType: 'inline'
-        script: |
-          exitcode=$(curl -X POST -d "vote=reset" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
-          echo "##vso[task.setvariable variable=exit3]$exitcode"
-
     - task: DockerInstaller@0
       inputs:
         dockerVersion: '17.09.0-ce'
@@ -190,6 +162,34 @@ stages:
       vmImage: 'ubuntu-latest' 
     steps:
         
+    - task: Bash@3
+      name: checksitefreevote
+      displayName: Test de la requête pour voter free
+      condition: succeeded()
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -X POST -d "vote=free" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
+          echo "##vso[task.setvariable variable=exit1]$exitcode"
+    - task: Bash@3
+      name: checksitem6mobilevote
+      displayName: Test de la requête pour voter m6mobile
+      condition: eq(variables['exit1'],'200')
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -X POST -d "vote=m6mobile" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
+          echo "##vso[task.setvariable variable=exit2]$exitcode"
+    - task: Bash@3
+      name: checksitereset
+      displayName: Test de la requête pour reset
+      condition: eq(variables['exit2'],'200')
+      inputs:
+        targetType: 'inline'
+        script: |
+          exitcode=$(curl -X POST -d "vote=reset" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
+          echo "##vso[task.setvariable variable=exit3]$exitcode"
+
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
       displayName: test du temps de réponse de la requête de vote sur prod
