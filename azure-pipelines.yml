@@ -69,7 +69,7 @@ stages:
 
 - stage: 'Get_Versions' 
   displayName: 'Get_Versions'
-  condition: succeeded()
+  condition: or(eq(dependencies.Grype_test.outputs['Grype_test.finalresult.gryre'],0),succeeded('VerificationGrype'))
   dependsOn: 
   - Grype_test
   - VerificationGrype
@@ -292,7 +292,7 @@ stages:
 - stage: 'Manualvalidation'
   dependsOn:
   - Test_Charge
-  condition: failed() 
+  condition: failed('Test_Charge') 
   displayName: 'In waiting of validation after tests has runned' 
   jobs:
   - job: waitForValidation
@@ -312,7 +312,7 @@ stages:
   dependsOn:
   - Manualvalidation
   - Get_Versions
-  condition: gt(dependencies.Test_Charge.outputs['Test.GetPodsCount.appcnt'],2)
+  condition: or(and(gt(dependencies.Test_Charge.outputs['Test.GetPodsCount.appcnt'],2),succeeded(Test_Charge)),succeeded(Manualvalidation))
   displayName: 'Canary_deploy' 
   jobs:
   - job: 'canary'
@@ -345,7 +345,7 @@ stages:
 - stage: 'ManualIntervention'
   dependsOn:
   - Canary_deploy
-  condition: succeeded() 
+  condition: succeeded()
   displayName: 'In waiting of validation of working canary release' 
   jobs:
   - job: waitForValidation
