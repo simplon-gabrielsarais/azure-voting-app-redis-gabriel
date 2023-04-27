@@ -363,7 +363,7 @@ stages:
         onTimeout: 'resume'
 
 - stage: 'supcanar'
-  condition: failed('ManualIntervention')
+  condition: or(failed('ManualIntervention'),failed('Manualvalidation'))
   dependsOn:
   - Get_Versions
   - ManualIntervention
@@ -410,7 +410,7 @@ stages:
   - Canary_deploy
   - ManualIntervention
   - Get_Versions
-  condition: or(succeeded('ManualIntervention'),succeeded('Manualvalidation')) 
+  condition: succeeded('ManualIntervention')
   displayName: 'Deploy on Prod and delete Canary' 
   jobs:
   - job: 'Deployonprod'
