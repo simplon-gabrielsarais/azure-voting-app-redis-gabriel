@@ -192,7 +192,6 @@ stages:
       inputs:
         testResultsFormat: 'NUnit'
         testResultsFiles: './test-results.xml'
-        mergeTestResults: true
 
 
     - task: CmdLine@2
