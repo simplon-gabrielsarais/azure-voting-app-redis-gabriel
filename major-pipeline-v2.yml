@@ -135,8 +135,8 @@ stages:
 
 
 - stage: VerificationOWASP
-  condition: failed()
-  dependsOn: Qal_deployment
+  condition: failed('Qal_Deployment')
+  dependsOn: Qal_Deployment
   displayName: 'In waiting of validation of OWASP report' 
   jobs:
   - job: waitForValidation
