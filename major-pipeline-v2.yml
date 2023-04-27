@@ -263,7 +263,7 @@ stages:
 - stage: 'Deploy_canary'
   dependsOn:
   - QAL_Deployment
-  condition: gt(dependencies.QAL_Deployment.outputs['QAL_Deploy.countpod.countpods'],2)
+  condition: and succeeded(), gt(dependencies.QAL_Deployment.outputs['QAL_Deploy.countpod.countpods'],2)
   displayName: 'Deploy Canary Release' 
   jobs:
   - job: 'Deploy_canary' 
