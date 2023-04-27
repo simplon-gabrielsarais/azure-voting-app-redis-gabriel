@@ -124,6 +124,32 @@ stages:
           exitcode=$(curl -X POST -d "vote=reset" http://qalvotingapp.simplon-thomas.space -w "%{http_code}" -o /dev/null)
           echo "##vso[task.setvariable variable=exit3]$exitcode"
 
+    - task: DockerInstaller@0
+      inputs:
+        dockerVersion: '17.09.0-ce'
+            
+    - task: CmdLine@2
+      inputs:
+        script: |
+          chmod -R 777 ./
+          docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t http://qal.distributeur-de-pain.best:80 -x report.xml
+          true
+      displayName: "Owasp Container Scan"
+        
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: '$XslPath = "owasp-zap/xml_to_nunit.xslt" $XmlInputPath = "report.xml" $XmlOutputPath = "test-results.xml" $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform $XslTransform.Load($XslPath) $XslTransform.Transform($XmlInputPath, $XmlOutputPath)'
+      displayName: "PowerShell Script"
+        
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results'
+      inputs:
+        testResultsFormat: 'NUnit'
+        testResultsFiles: 'owaspzap/test-results.xml'
+        mergeTestResults: true
+
+
 
     - task: CmdLine@2
       condition: eq(variables['exit3'],'200')
