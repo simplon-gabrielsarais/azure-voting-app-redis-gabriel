@@ -191,7 +191,7 @@ stages:
       displayName: 'Publish Test Results'
       inputs:
         testResultsFormat: 'NUnit'
-        testResultsFiles: 'owaspzap/test-results.xml'
+        testResultsFiles: './test-results.xml'
         mergeTestResults: true
 
 
