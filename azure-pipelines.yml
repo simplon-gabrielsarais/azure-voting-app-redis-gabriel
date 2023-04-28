@@ -259,7 +259,7 @@ stages:
       name: "wait"
     - task: Kubernetes@1
       name: kubepods
-      condition: succeeded('wait')
+      condition: gt(variables['trprod'],variables['trqal'])
       inputs:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceEndpoint: 'connexion'
@@ -269,7 +269,7 @@ stages:
         configuration: './qal/voteapp_qal.yml'
     - task: CmdLine@2
       name: modif_manif
-      condition: succeeded('kubepods')
+      condition: gt(variables['trprod'],variables['trqal'])
       inputs:
         script: |
           sed -i 's/{{ version }}/'$(vernew)'/g' kube_brief6/voteapp.yml
@@ -285,7 +285,7 @@ stages:
           echo "##vso[task.setvariable variable=appcnt;isOutput=true]$voteappcount"
     - task: KubernetesManifest@0
       name: "kube_qal_del"
-      condition: succeeded('GetPodsCount')
+      condition: gt(variables['trprod'],variables['trqal'])
       inputs:
         action: 'delete'
         kubernetesServiceConnection: 'connexion'
