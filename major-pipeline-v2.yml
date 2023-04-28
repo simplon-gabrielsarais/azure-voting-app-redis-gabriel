@@ -153,6 +153,7 @@ stages:
         testResultsFormat: 'NUnit'
         testResultsFiles: './test-results.xml'
         mergeTestResults: true
+        failTaskOnFailedTests: true
 
 
 - stage: VerificationOWASP
