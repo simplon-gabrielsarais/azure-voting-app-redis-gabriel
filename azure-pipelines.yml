@@ -276,7 +276,7 @@ stages:
           sed -i 's/{{ version }}/'$(vernew)'/g' qal/voteapp_qal.yml
           echo $(vernew)
     - task: CmdLine@2
-      condition: succeeded('modif_manif')
+      condition: gt(variables['trprod'],variables['trqal'])
       name: "GetPodsCount"
       inputs:
         script: |
