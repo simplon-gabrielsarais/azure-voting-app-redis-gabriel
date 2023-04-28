@@ -297,7 +297,7 @@ stages:
         containerRegistryType: 'Azure Container Registry'
 
 - stage: Delete_Qal
-  condition: failed()
+  condition: failed('VerificationOWASP')
   dependsOn: VerificationOWASP
   displayName: Suppression de la QAL si failed
   jobs:
